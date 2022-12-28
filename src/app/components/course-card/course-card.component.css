@@ -1,0 +1,10 @@
+.course-card {
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.duration-and-date {
+  color: #999;
+  font-size: 15px;
+}

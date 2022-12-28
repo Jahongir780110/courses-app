@@ -1,0 +1,13 @@
+.header {
+  height: 60px;
+  display: flex;
+}
+
+.navbar {
+  background-color: #414452;
+  width: 100%;
+}
+
+.navbar a {
+  color: #fff;
+}
