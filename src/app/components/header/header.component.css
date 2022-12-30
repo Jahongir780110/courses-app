@@ -11,3 +11,9 @@
 .navbar a {
   color: #fff;
 }
+
+@media (max-width: 576px) {
+  .nav-item__text {
+    display: none;
+  }
+}

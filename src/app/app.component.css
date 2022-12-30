@@ -1,5 +1,6 @@
 main {
-  min-height: calc(100% - 120px);
+  min-height: calc(100% - 60px);
+  padding-bottom: 60px;
   background-color: #f2f3f7;
   display: flex;
   flex-direction: column;

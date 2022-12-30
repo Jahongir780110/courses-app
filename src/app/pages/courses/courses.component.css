@@ -2,8 +2,21 @@
   width: 280px;
 }
 
+@media (max-width: 400px) {
+  .search input {
+    width: 200px;
+  }
+}
+
 .load-more {
   background-color: #fff;
   border-radius: 6px;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.load-more span {
+  display: inline-block;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
 }

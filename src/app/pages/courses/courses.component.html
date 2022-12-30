@@ -1,8 +1,15 @@
 <div class="courses">
   <div class="container">
     <div class="search d-flex mt-3">
-      <input type="text" class="form-control" placeholder="Text to search" />
-      <button class="btn btn-success ms-2">Serach</button>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Text to search"
+        [(ngModel)]="searchText"
+      />
+      <button class="btn btn-success ms-2" (click)="searchCourses()">
+        Search
+      </button>
     </div>
 
     <div class="add-course mt-3 text-end">
@@ -10,15 +17,18 @@
     </div>
 
     <div class="course-cards mt-2">
-      <app-course-card></app-course-card>
-      <app-course-card></app-course-card>
-      <app-course-card></app-course-card>
+      <app-course-card
+        *ngFor="let course of courses; trackBy: identifyCourse"
+        [course]="course"
+        (edit)="editCourse($event)"
+        (delete)="deleteCourse($event)"
+      ></app-course-card>
     </div>
 
     <div
-      class="load-more mb-5 p-4 d-flex align-items-center justify-content-center"
+      class="load-more mb-sm-5 mb-3 p-4 d-flex align-items-center justify-content-center"
     >
-      <a href="#">LOAD MORE</a>
+      <span (click)="loadMoreCourses()">LOAD MORE</span>
     </div>
   </div>
 </div>
