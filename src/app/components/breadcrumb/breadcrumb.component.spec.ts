@@ -8,16 +8,21 @@ describe('BreadcrumbComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BreadcrumbComponent ]
-    })
-    .compileComponents();
+      declarations: [BreadcrumbComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(BreadcrumbComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it("should contain 'Courses'", () => {
+    const template = fixture.nativeElement as HTMLElement;
+    expect(template.querySelector('.breadcrumb a')?.textContent).toBe(
+      'Courses'
+    );
   });
 });
