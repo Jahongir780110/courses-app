@@ -28,10 +28,6 @@ describe('HeaderComponent', () => {
     expect(template.querySelector('app-logo')).toBeTruthy();
   });
 
-  it('should contain logo', () => {
-    expect(template.querySelector('app-logo')).toBeTruthy();
-  });
-
   it("should contain 'user login'", () => {
     expect(
       template.querySelectorAll('.navbar-nav .nav-item span')[0].textContent

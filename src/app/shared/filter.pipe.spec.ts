@@ -1,22 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { Course } from 'src/app/models/course.model';
-import { FilterPipe } from 'src/app/shared/filter.pipe';
+import { FilterPipe } from './filter.pipe';
 
-@Component({
-  selector: 'app-courses',
-  templateUrl: './courses.component.html',
-  styleUrls: ['./courses.component.css'],
-  providers: [FilterPipe],
-})
-export class CoursesComponent implements OnInit {
-  searchText = '';
-  courses: Course[] = [];
-  filteredCourses: Course[] = [];
+describe('FilterPipe', () => {
+  it('create an instance', () => {
+    const pipe = new FilterPipe();
+    expect(pipe).toBeTruthy();
+  });
 
-  constructor(private filterPipe: FilterPipe) {}
-
-  ngOnInit() {
-    this.courses = [
+  it('should filter courses', () => {
+    const filterPipe = new FilterPipe();
+    const mockCourses = [
       {
         id: 1,
         title: 'Video Course 1. Name tag',
@@ -45,29 +37,17 @@ export class CoursesComponent implements OnInit {
         topRated: true,
       },
     ];
-    this.filteredCourses = this.courses;
-  }
-
-  searchCourses() {
-    this.filteredCourses = this.filterPipe.transform(
-      this.courses,
-      this.searchText
-    );
-  }
-
-  loadMoreCourses() {
-    console.log('log more');
-  }
-
-  editCourse(courseId: number) {
-    console.log(courseId);
-  }
-
-  deleteCourse(courseId: number) {
-    console.log(courseId);
-  }
-
-  identifyCourse(index: number, course: Course) {
-    return course.id;
-  }
-}
+    const filteredCourses = filterPipe.transform(mockCourses, '2');
+    expect(filteredCourses).toEqual([
+      {
+        id: 2,
+        title: 'Video Course 2. Name tag',
+        duration: '27 min',
+        creationDate: new Date(2023, 2, 12),
+        description:
+          "Learn about where you can find course desciptions, what information they include, how they work, and details about various components of a coursedescription. Course descriptions report informationa bout a universityor colleges classes. They're published both in course catalogs thatoutline degree requirements and in course schedules that containdescriptions for all courses offered during.",
+        topRated: false,
+      },
+    ]);
+  });
+});

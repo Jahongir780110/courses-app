@@ -1,19 +1,34 @@
-<div class="course-card p-md-4 p-3 mb-4">
+<div
+  class="course-card p-md-4 p-3 mb-4"
+  [ngClass]="{ topRated: course.topRated }"
+  appChangeBorderColor
+  [date]="course.creationDate"
+>
   <div class="row align-items-center">
     <div class="content col-lg-9 col-12">
       <div
         class="top d-md-flex d-block justify-content-between align-items-center"
       >
-        <h4 class="title">{{ course.title }}</h4>
+        <h4 class="title">
+          {{ course.title | uppercase }}
+
+          <span *ngIf="course.topRated" class="top-rated-icon">
+            <fa-icon [icon]="faStar"></fa-icon>
+          </span>
+        </h4>
 
         <div class="duration-and-date">
           <span class="duration">
             <fa-icon [icon]="faClock"></fa-icon>
-            <span class="duration-text ms-1">{{ course.duration }}</span>
+            <span class="duration-text ms-1">{{
+              course.duration | duration
+            }}</span>
           </span>
           <span class="date ms-3">
             <fa-icon [icon]="faCalendarDays"></fa-icon>
-            <span class="date-text ms-1">{{ course.creationDate }}</span>
+            <span class="date-text ms-1">{{
+              course.creationDate | date : "dd MMM, yyyy"
+            }}</span>
           </span>
         </div>
       </div>

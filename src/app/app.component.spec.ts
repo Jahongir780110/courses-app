@@ -8,6 +8,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { LogoComponent } from './components/logo/logo.component';
 import { CoursesComponent } from './pages/courses/courses.component';
+import { OrderByPipe } from './shared/order-by.pipe';
 
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
@@ -25,6 +26,7 @@ describe('AppComponent', () => {
         CoursesComponent,
         LogoComponent,
         CourseCardComponent,
+        OrderByPipe,
       ],
     }).compileComponents();
 

@@ -1,7 +1,16 @@
 .course-card {
   background-color: #fff;
+  border: 1px solid transparent;
   border-radius: 6px;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.course-card.topRated {
+  background-color: #ffffeb;
+}
+
+.top-rated-icon {
+  font-size: 14px;
+  color: #ffc000;
 }
 
 .duration-and-date {

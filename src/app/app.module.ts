@@ -10,6 +10,10 @@ import { CoursesComponent } from './pages/courses/courses.component';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { LogoComponent } from './components/logo/logo.component';
 import { CourseCardComponent } from './components/course-card/course-card.component';
+import { ChangeBorderColorDirective } from './shared/change-border-color.directive';
+import { DurationPipe } from './shared/duration.pipe';
+import { OrderByPipe } from './shared/order-by.pipe';
+import { FilterPipe } from './shared/filter.pipe';
 
 @NgModule({
   declarations: [
@@ -20,6 +24,10 @@ import { CourseCardComponent } from './components/course-card/course-card.compon
     BreadcrumbComponent,
     LogoComponent,
     CourseCardComponent,
+    ChangeBorderColorDirective,
+    DurationPipe,
+    OrderByPipe,
+    FilterPipe,
   ],
   imports: [BrowserModule, FontAwesomeModule, FormsModule],
   providers: [],

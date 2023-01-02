@@ -14,6 +14,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { faCalendarDays } from '@fortawesome/free-solid-svg-icons';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { Course } from 'src/app/models/course.model';
 
 @Component({
@@ -38,6 +39,7 @@ export class CourseCardComponent
   faTrash = faTrash;
   faClock = faClock;
   faCalendarDays = faCalendarDays;
+  faStar = faStar;
 
   ngOnInit() {
     console.log('OnInit');
