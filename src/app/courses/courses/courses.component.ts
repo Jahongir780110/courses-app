@@ -11,7 +11,6 @@ import { FilterPipe } from 'src/app/shared/filter.pipe';
 })
 export class CoursesComponent implements OnInit {
   searchText = '';
-  courses: Course[] = [];
   filteredCourses: Course[] = [];
 
   constructor(
@@ -20,18 +19,16 @@ export class CoursesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.courses = this.courseService.getCourses();
-    this.filteredCourses = this.courses;
+    this.filteredCourses = this.courseService.getCourses();
 
     this.courseService.coursesChanged.subscribe((courses) => {
-      this.courses = courses;
-      this.filteredCourses = this.courses;
+      this.filteredCourses = courses;
     });
   }
 
   searchCourses() {
     this.filteredCourses = this.filterPipe.transform(
-      this.courses,
+      this.courseService.getCourses(),
       this.searchText
     );
   }

@@ -2,7 +2,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { CourseCardComponent } from 'src/app/components/course-card/course-card.component';
+import { CourseCardComponent } from 'src/app/courses/course-card/course-card.component';
 import { DurationPipe } from 'src/app/shared/duration.pipe';
 import { OrderByPipe } from 'src/app/shared/order-by.pipe';
 
@@ -36,13 +36,13 @@ describe('CoursesComponent', () => {
 
   it('should have all course data', () => {
     fixture.detectChanges();
-    expect(component.courses.length).toBeGreaterThan(0);
+    expect(component.filteredCourses.length).toBeGreaterThan(0);
   });
 
   it('should show courses ordered by creation date', () => {
     fixture.detectChanges();
     const orderByPipe = new OrderByPipe();
-    const orderedCourses = orderByPipe.transform(component.courses);
+    const orderedCourses = orderByPipe.transform(component.filteredCourses);
     expect(orderedCourses).toEqual([
       {
         id: 2,
@@ -104,7 +104,7 @@ describe('CoursesComponent', () => {
 
   it('shouldn\'t show "log more" if there are no courses', () => {
     fixture.detectChanges();
-    component.courses = [];
+    component.filteredCourses = [];
     fixture.detectChanges();
 
     const loadMoreBtn = template.querySelector(
@@ -128,7 +128,7 @@ describe('CoursesComponent', () => {
 
   it('should show "no courses" text if there are no courses', () => {
     fixture.detectChanges();
-    component.courses = [];
+    component.filteredCourses = [];
     fixture.detectChanges();
     expect(template.querySelector('.no-data')).toBeTruthy();
   });
@@ -137,13 +137,6 @@ describe('CoursesComponent', () => {
     const spy = spyOn(window.console, 'log');
 
     component.editCourse(55);
-    expect(spy).toHaveBeenCalledWith(55);
-  });
-
-  it('should log course id when deleteCourse() is called', () => {
-    const spy = spyOn(window.console, 'log');
-
-    component.deleteCourse(55);
     expect(spy).toHaveBeenCalledWith(55);
   });
 });

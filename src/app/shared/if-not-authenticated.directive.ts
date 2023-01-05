@@ -1,6 +1,6 @@
 import {
   Directive,
-  DoCheck,
+  OnInit,
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
@@ -9,7 +9,7 @@ import { AuthenticationService } from '../services/authentication.service';
 @Directive({
   selector: '[appIfNotAuthenticated]',
 })
-export class IfNotAuthenticatedDirective implements DoCheck {
+export class IfNotAuthenticatedDirective implements OnInit {
   hasView = false;
 
   constructor(
@@ -18,13 +18,21 @@ export class IfNotAuthenticatedDirective implements DoCheck {
     private authenticationService: AuthenticationService
   ) {}
 
-  ngDoCheck() {
-    if (!this.authenticationService.isAuthenticated && !this.hasView) {
-      console.log('worked');
+  ngOnInit() {
+    this.render(this.authenticationService.isAuthenticated());
 
+    this.authenticationService.authenticationChanged.subscribe(
+      (isAuthenticated) => {
+        this.render(isAuthenticated);
+      }
+    );
+  }
+
+  render(isAuthenticated: boolean) {
+    if (!isAuthenticated && !this.hasView) {
       this.viewContainer.createEmbeddedView(this.templateRef);
       this.hasView = true;
-    } else if (this.authenticationService.isAuthenticated && this.hasView) {
+    } else if (isAuthenticated && this.hasView) {
       this.viewContainer.clear();
       this.hasView = false;
     }

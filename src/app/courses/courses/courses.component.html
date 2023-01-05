@@ -28,13 +28,16 @@
     </div>
 
     <div
-      *ngIf="courses.length"
+      *ngIf="filteredCourses.length"
       class="load-more mb-sm-5 mb-3 p-4 d-flex align-items-center justify-content-center"
     >
       <span (click)="loadMoreCourses()">LOAD MORE</span>
     </div>
 
-    <div *ngIf="!courses.length" class="no-data mt-4 text-center text-danger">
+    <div
+      *ngIf="!filteredCourses.length"
+      class="no-data mt-4 text-center text-danger"
+    >
       NO DATA. FEEL FREE TO ADD NEW COURSE
     </div>
   </div>
