@@ -44,10 +44,17 @@
         <span class="btn-text ms-2">Edit</span>
       </button>
 
-      <button class="btn btn-primary ms-3" (click)="deleteCourse()">
+      <button class="btn btn-primary ms-3" (click)="showModal = true">
         <fa-icon [icon]="faTrash"></fa-icon>
         <span class="btn-text ms-2">Delete</span>
       </button>
     </div>
   </div>
 </div>
+
+<app-prompt-modal
+  *ngIf="showModal"
+  promptText="Do you really want to delete the course?"
+  (cancel)="showModal = false"
+  (proceed)="showModal = false; deleteCourse()"
+></app-prompt-modal>

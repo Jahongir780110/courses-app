@@ -14,6 +14,10 @@ import { ChangeBorderColorDirective } from './shared/change-border-color.directi
 import { DurationPipe } from './shared/duration.pipe';
 import { OrderByPipe } from './shared/order-by.pipe';
 import { FilterPipe } from './shared/filter.pipe';
+import { PromptModalComponent } from './shared/prompt-modal/prompt-modal.component';
+import { UserModule } from './user/user.module';
+import { IfAuthenticatedDirective } from './shared/if-authenticated.directive';
+import { IfNotAuthenticatedDirective } from './shared/if-not-authenticated.directive';
 
 @NgModule({
   declarations: [
@@ -28,8 +32,11 @@ import { FilterPipe } from './shared/filter.pipe';
     DurationPipe,
     OrderByPipe,
     FilterPipe,
+    PromptModalComponent,
+    IfAuthenticatedDirective,
+    IfNotAuthenticatedDirective,
   ],
-  imports: [BrowserModule, FontAwesomeModule, FormsModule],
+  imports: [BrowserModule, FontAwesomeModule, FormsModule, UserModule],
   providers: [],
   bootstrap: [AppComponent],
 })

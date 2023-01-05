@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-header',
@@ -10,4 +11,11 @@ import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 export class HeaderComponent {
   faUser = faUser;
   faRightFromBracket = faRightFromBracket;
+
+  constructor(private authenticationService: AuthenticationService) {}
+
+  logout() {
+    this.authenticationService.logout();
+    console.log('Log out');
+  }
 }

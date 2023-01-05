@@ -16,6 +16,7 @@ import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { Course } from 'src/app/models/course.model';
+import { CourseService } from 'src/app/services/course.service';
 
 @Component({
   selector: 'app-course-card',
@@ -41,6 +42,10 @@ export class CourseCardComponent
   faCalendarDays = faCalendarDays;
   faStar = faStar;
 
+  showModal = false;
+
+  constructor(private courseService: CourseService) {}
+
   ngOnInit() {
     console.log('OnInit');
   }
@@ -65,6 +70,6 @@ export class CourseCardComponent
   }
 
   deleteCourse() {
-    this.delete.emit(this.course.id);
+    this.courseService.removeCourse(this.course.id);
   }
 }

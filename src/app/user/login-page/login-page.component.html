@@ -1,0 +1,50 @@
+<div class="login-page">
+  <div class="form-card p-3">
+    <h3 class="title">Login</h3>
+
+    <form>
+      <div class="email mt-3">
+        <label
+          for="email"
+          class="form-label w-100 d-flex justify-content-between"
+        >
+          <span class="label-text">Email:</span>
+          <span class="required text-secondary">*required</span>
+        </label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          placeholder="Enter email"
+          name="email"
+          [(ngModel)]="email"
+        />
+      </div>
+
+      <div class="password mt-3">
+        <label
+          for="pwd"
+          class="form-label w-100 d-flex justify-content-between"
+        >
+          <span class="label-text">Email:</span>
+          <span class="required text-secondary">*required</span>
+        </label>
+        <input
+          type="password"
+          class="form-control"
+          id="pwd"
+          placeholder="Enter password"
+          name="pswd"
+          [(ngModel)]="password"
+        />
+      </div>
+
+      <div class="bottom mt-4 d-flex justify-content-between">
+        <a href="#">Forgot password?</a>
+        <button type="submit" class="btn btn-primary" (click)="login($event)">
+          Login
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+.login-page {
+  display: flex;
+  justify-content: center;
+}
+
+.form-card {
+  margin-top: 120px;
+  width: 400px;
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
