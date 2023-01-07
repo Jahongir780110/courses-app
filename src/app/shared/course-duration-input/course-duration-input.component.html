@@ -1,0 +1,26 @@
+<div class="wrapper d-flex align-items-end">
+  <div class="duration mt-3">
+    <label
+      for="duration"
+      class="form-label w-100 d-flex justify-content-between"
+    >
+      <span class="label-text">Duration:</span>
+      <span class="required text-secondary">*required</span>
+    </label>
+
+    <input
+      type="number"
+      min="0"
+      class="form-control"
+      id="duration"
+      placeholder="minutes"
+      name="duration"
+      [value]="duration"
+      (input)="changeDuration($event)"
+    />
+  </div>
+
+  <div class="duration-value fw-bolder ms-5">
+    {{ duration | duration }}
+  </div>
+</div>

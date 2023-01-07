@@ -15,7 +15,6 @@ describe('LogoComponent', () => {
 
     fixture = TestBed.createComponent(LogoComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {

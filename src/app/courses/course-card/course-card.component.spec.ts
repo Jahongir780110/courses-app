@@ -1,11 +1,9 @@
 import { DatePipe, UpperCasePipe } from '@angular/common';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { CourseService } from 'src/app/services/course.service';
-import { ChangeBorderColorDirective } from 'src/app/shared/change-border-color.directive';
-import { DurationPipe } from 'src/app/shared/duration.pipe';
-import { PromptModalComponent } from 'src/app/shared/prompt-modal/prompt-modal.component';
+import { Course } from 'src/app/models/course.model';
+import { DurationPipe } from 'src/app/shared/pipes/duration.pipe';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 import { CourseCardComponent } from './course-card.component';
 
@@ -13,24 +11,26 @@ describe('CourseCardComponent', () => {
   let component: CourseCardComponent;
   let fixture: ComponentFixture<CourseCardComponent>;
   let template: HTMLElement;
-  let service: CourseService;
+  let mockCourse: Course;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FontAwesomeModule],
-      declarations: [
-        CourseCardComponent,
-        DurationPipe,
-        ChangeBorderColorDirective,
-        PromptModalComponent,
-      ],
+      imports: [SharedModule],
+      declarations: [CourseCardComponent],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CourseCardComponent);
     component = fixture.componentInstance;
     template = fixture.nativeElement as HTMLElement;
-    service = TestBed.inject(CourseService);
+    mockCourse = {
+      id: 1,
+      title: 'Sample title',
+      duration: 12,
+      creationDate: new Date(),
+      description: 'Sample description',
+      topRated: true,
+    };
   });
 
   it('should create', () => {
@@ -38,59 +38,37 @@ describe('CourseCardComponent', () => {
   });
 
   it('should have "green" border color if the course is recent', () => {
-    component.course = {
-      id: 1,
-      title: 'Sample title',
-      duration: 'Sample duration',
-      creationDate: new Date(2022, 11, 29),
-      description: 'Sample description',
-      topRated: true,
-    };
+    component.course = { ...mockCourse, creationDate: new Date(2023, 0, 5) };
+
     fixture.detectChanges();
+
     expect(
       template.querySelector<HTMLElement>('.course-card')?.style.borderColor
     ).toBe('rgb(25, 135, 84)');
   });
 
   it('should have "blue" border color if the course is upcoming', () => {
-    component.course = {
-      id: 1,
-      title: 'Sample title',
-      duration: 'Sample duration',
-      creationDate: new Date(2024, 11, 29),
-      description: 'Sample description',
-      topRated: true,
-    };
+    component.course = { ...mockCourse, creationDate: new Date(2024, 0, 5) };
+
     fixture.detectChanges();
+
     expect(
       template.querySelector<HTMLElement>('.course-card')?.style.borderColor
     ).toBe('rgb(13, 110, 253)');
   });
 
   it('should have "transparent" border color if the course is very old', () => {
-    component.course = {
-      id: 1,
-      title: 'Sample title',
-      duration: 'Sample duration',
-      creationDate: new Date(2020, 11, 29),
-      description: 'Sample description',
-      topRated: true,
-    };
+    component.course = { ...mockCourse, creationDate: new Date(2020, 0, 5) };
+
     fixture.detectChanges();
+
     expect(
       template.querySelector<HTMLElement>('.course-card')?.style.borderColor
     ).toBe('');
   });
 
   it('should emit "edit" once clicked "edit" button', () => {
-    component.course = {
-      id: 1,
-      title: 'Sample title',
-      duration: 'Sample duration',
-      creationDate: new Date(),
-      description: 'Sample description',
-      topRated: true,
-    };
+    component.course = mockCourse;
     fixture.detectChanges();
 
     const spy = spyOn(component.edit, 'emit');
@@ -102,7 +80,7 @@ describe('CourseCardComponent', () => {
   });
 
   it('should open prompt modal once clicked "delete" button', () => {
-    component.course = service.getCourses()[0];
+    component.course = mockCourse;
     fixture.detectChanges();
 
     const deleteBtn = template.querySelectorAll('.controls button')[1];
@@ -113,14 +91,15 @@ describe('CourseCardComponent', () => {
     expect(template.querySelector('app-prompt-modal')).toBeTruthy();
   });
 
-  it('should remove course once delete() is called', () => {
-    component.course = service.getCourses()[0];
+  it('should emit delete once delete() is called', () => {
+    const spy = spyOn(component.delete, 'emit');
+
+    component.course = mockCourse;
     fixture.detectChanges();
 
     component.deleteCourse();
-    fixture.detectChanges();
 
-    expect(service.getCourses()).not.toContain(component.course);
+    expect(spy).toHaveBeenCalledWith(component.course.id);
   });
 
   it('should render title, duration, creationDate and description', () => {
@@ -128,14 +107,7 @@ describe('CourseCardComponent', () => {
     const upperCasePipe = new UpperCasePipe();
     const datePipe = new DatePipe('en-EN');
 
-    component.course = {
-      id: 1,
-      title: 'Sample title',
-      duration: 'Sample duration',
-      creationDate: new Date(),
-      description: 'Sample description',
-      topRated: true,
-    };
+    component.course = mockCourse;
     fixture.detectChanges();
 
     expect(template.querySelector('.title')?.textContent).toContain(
@@ -153,40 +125,30 @@ describe('CourseCardComponent', () => {
   });
 
   it('should have "star" icon if the course is top rated', () => {
-    component.course = {
-      id: 1,
-      title: 'Sample title',
-      duration: 'Sample duration',
-      creationDate: new Date(),
-      description: 'Sample description',
-      topRated: true,
-    };
+    component.course = { ...mockCourse, topRated: true };
     fixture.detectChanges();
+
     expect(template.querySelector('.top-rated-icon')).toBeTruthy();
   });
 
-  it('shouldn\'t have "star" icon if the course is top rated', () => {
-    component.course = {
-      id: 1,
-      title: 'Sample title',
-      duration: 'Sample duration',
-      creationDate: new Date(),
-      description: 'Sample description',
-      topRated: false,
-    };
+  it('shouldn\'t have "star" icon if the course is not top rated', () => {
+    component.course = { ...mockCourse, topRated: false };
     fixture.detectChanges();
+
     expect(template.querySelector('.top-rated-icon')).not.toBeTruthy();
   });
 
   it('should console log "OnInit" when ngOnInit hook is called', () => {
     const spy = spyOn(window.console, 'log');
     component.ngOnInit();
+
     expect(spy).toHaveBeenCalledWith('OnInit');
   });
 
   it('should console log "AfterViewInit" when ngAfterViewInit hook is called', () => {
     const spy = spyOn(window.console, 'log');
     component.ngAfterViewInit();
+
     expect(spy).toHaveBeenCalledWith('AfterViewInit');
   });
 });

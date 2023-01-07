@@ -1,10 +1,8 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CourseCardComponent } from 'src/app/courses/course-card/course-card.component';
-import { DurationPipe } from 'src/app/shared/duration.pipe';
-import { OrderByPipe } from 'src/app/shared/order-by.pipe';
+import { OrderByPipe } from 'src/app/shared/pipes/order-by.pipe';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 import { CoursesComponent } from './courses.component';
 
@@ -15,13 +13,8 @@ describe('CoursesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormsModule, FontAwesomeModule],
-      declarations: [
-        CoursesComponent,
-        CourseCardComponent,
-        OrderByPipe,
-        DurationPipe,
-      ],
+      imports: [SharedModule],
+      declarations: [CoursesComponent, CourseCardComponent],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
@@ -43,11 +36,12 @@ describe('CoursesComponent', () => {
     fixture.detectChanges();
     const orderByPipe = new OrderByPipe();
     const orderedCourses = orderByPipe.transform(component.filteredCourses);
+
     expect(orderedCourses).toEqual([
       {
         id: 2,
         title: 'Video Course 2. Name tag',
-        duration: '27 min',
+        duration: 27,
         creationDate: new Date(2023, 2, 12),
         description:
           "Learn about where you can find course desciptions, what information they include, how they work, and details about various components of a coursedescription. Course descriptions report informationa bout a universityor colleges classes. They're published both in course catalogs thatoutline degree requirements and in course schedules that containdescriptions for all courses offered during.",
@@ -56,7 +50,7 @@ describe('CoursesComponent', () => {
       {
         id: 1,
         title: 'Video Course 1. Name tag',
-        duration: '88 min',
+        duration: 88,
         creationDate: new Date(2022, 11, 29),
         description:
           "Learn about where you can find course desciptions, what information they include, how they work, and details about various components of a coursedescription. Course descriptions report informationa bout a universityor colleges classes. They're published both in course catalogs thatoutline degree requirements and in course schedules that containdescriptions for all courses offered during.",
@@ -65,7 +59,7 @@ describe('CoursesComponent', () => {
       {
         id: 3,
         title: 'Video Course 3. Name tag',
-        duration: '125 min',
+        duration: 125,
         creationDate: new Date(2018, 8, 3),
         description:
           "Learn about where you can find course desciptions, what information they include, how they work, and details about various components of a coursedescription. Course descriptions report informationa bout a universityor colleges classes. They're published both in course catalogs thatoutline degree requirements and in course schedules that containdescriptions for all courses offered during.",
@@ -93,7 +87,7 @@ describe('CoursesComponent', () => {
       {
         id: 2,
         title: 'Video Course 2. Name tag',
-        duration: '27 min',
+        duration: 27,
         creationDate: new Date(2023, 2, 12),
         description:
           "Learn about where you can find course desciptions, what information they include, how they work, and details about various components of a coursedescription. Course descriptions report informationa bout a universityor colleges classes. They're published both in course catalogs thatoutline degree requirements and in course schedules that containdescriptions for all courses offered during.",
@@ -128,8 +122,10 @@ describe('CoursesComponent', () => {
 
   it('should show "no courses" text if there are no courses', () => {
     fixture.detectChanges();
+
     component.filteredCourses = [];
     fixture.detectChanges();
+
     expect(template.querySelector('.no-data')).toBeTruthy();
   });
 
@@ -138,5 +134,15 @@ describe('CoursesComponent', () => {
 
     component.editCourse(55);
     expect(spy).toHaveBeenCalledWith(55);
+  });
+
+  it('should show add-course page if add-course button is clicked', () => {
+    fixture.detectChanges();
+
+    const addCourseBtn = template.querySelector('.add-course button');
+    addCourseBtn?.dispatchEvent(new Event('click'));
+    fixture.detectChanges();
+
+    expect(template.querySelector('app-add-course-page')).toBeTruthy();
   });
 });

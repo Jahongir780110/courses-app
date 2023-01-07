@@ -8,7 +8,7 @@ describe('LoginPageComponent', () => {
   let component: LoginPageComponent;
   let fixture: ComponentFixture<LoginPageComponent>;
   let template: HTMLElement;
-  let service: AuthenticationService;
+  let authService: AuthenticationService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -19,8 +19,7 @@ describe('LoginPageComponent', () => {
     fixture = TestBed.createComponent(LoginPageComponent);
     component = fixture.componentInstance;
     template = fixture.nativeElement as HTMLElement;
-    service = TestBed.inject(AuthenticationService);
-    fixture.detectChanges();
+    authService = TestBed.inject(AuthenticationService);
   });
 
   it('should create', () => {
@@ -29,9 +28,12 @@ describe('LoginPageComponent', () => {
 
   it('should store user info once login button is clicked', () => {
     component.email = 'sampleemail@gmail.com';
-    component.password = '';
+    component.password = 'sample password';
     fixture.detectChanges();
-    template.querySelector('.bottom button')?.dispatchEvent(new Event('click'));
-    expect(service.isAuthenticated()).toBeTrue();
+
+    const loginBtn = template.querySelector('.bottom button');
+    loginBtn?.dispatchEvent(new Event('click'));
+
+    expect(authService.isAuthenticated()).toBeTrue();
   });
 });

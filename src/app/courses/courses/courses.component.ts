@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Course } from 'src/app/models/course.model';
 import { CourseService } from 'src/app/services/course.service';
-import { FilterPipe } from 'src/app/shared/filter.pipe';
+import { FilterPipe } from 'src/app/shared/pipes/filter.pipe';
 
 @Component({
   selector: 'app-courses',
@@ -12,6 +12,7 @@ import { FilterPipe } from 'src/app/shared/filter.pipe';
 export class CoursesComponent implements OnInit {
   searchText = '';
   filteredCourses: Course[] = [];
+  isAddingCourse = false;
 
   constructor(
     private filterPipe: FilterPipe,
@@ -39,6 +40,14 @@ export class CoursesComponent implements OnInit {
 
   editCourse(courseId: number) {
     console.log(courseId);
+  }
+
+  deleteCourse(courseId: number) {
+    this.courseService.removeCourse(courseId);
+  }
+
+  showAddCoursePage() {
+    this.isAddingCourse = true;
   }
 
   identifyCourse(index: number, course: Course) {

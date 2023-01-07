@@ -15,7 +15,6 @@ describe('PromptModalComponent', () => {
     fixture = TestBed.createComponent(PromptModalComponent);
     component = fixture.componentInstance;
     template = fixture.nativeElement as HTMLElement;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
@@ -23,8 +22,11 @@ describe('PromptModalComponent', () => {
   });
 
   it('should emit "proceed" if confirm button is clicked', () => {
+    fixture.detectChanges();
+
     const confirmBtn = template.querySelectorAll('.modal-footer button')[1];
     const spy = spyOn(component.proceed, 'emit');
+
     confirmBtn.dispatchEvent(new Event('click'));
     expect(spy).toHaveBeenCalled();
   });

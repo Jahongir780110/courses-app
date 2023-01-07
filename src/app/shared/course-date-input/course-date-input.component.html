@@ -1,0 +1,16 @@
+<div class="date mt-3">
+  <label for="date" class="form-label w-100 d-flex justify-content-between">
+    <span class="label-text">Date:</span>
+    <span class="required text-secondary">*required</span>
+  </label>
+
+  <input
+    type="date"
+    class="form-control"
+    id="date"
+    placeholder="MM/DD/YYYY"
+    name="date"
+    [value]="date"
+    (input)="changeDate($event)"
+  />
+</div>

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IfAuthenticatedDirective } from './if-authenticated.directive';
 
 @Component({
-  template: `<div *appIfAuthenticated id="authenticated">Authenticated</div>`,
+  template: `<div *appIfAuthenticated>Authenticated</div>`,
 })
 class TestComponent {}
 

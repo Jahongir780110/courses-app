@@ -9,6 +9,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -16,12 +17,12 @@ import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { Course } from 'src/app/models/course.model';
-import { CourseService } from 'src/app/services/course.service';
 
 @Component({
   selector: 'app-course-card',
   templateUrl: './course-card.component.html',
   styleUrls: ['./course-card.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CourseCardComponent
   implements
@@ -44,8 +45,6 @@ export class CourseCardComponent
 
   showModal = false;
 
-  constructor(private courseService: CourseService) {}
-
   ngOnInit() {
     console.log('OnInit');
   }
@@ -61,6 +60,7 @@ export class CourseCardComponent
   ngAfterViewInit() {
     console.log('AfterViewInit');
   }
+
   ngOnDestroy() {
     console.log('OnDestroy');
   }
@@ -70,6 +70,6 @@ export class CourseCardComponent
   }
 
   deleteCourse() {
-    this.courseService.removeCourse(this.course.id);
+    this.delete.emit(this.course.id);
   }
 }

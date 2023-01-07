@@ -1,4 +1,4 @@
-<div class="courses">
+<div *ngIf="!isAddingCourse" class="courses">
   <div class="container">
     <div class="search d-flex mt-3">
       <input
@@ -13,7 +13,9 @@
     </div>
 
     <div class="add-course mt-3 text-end">
-      <button class="btn btn-primary">+ Add course</button>
+      <button class="btn btn-primary" (click)="showAddCoursePage()">
+        + Add course
+      </button>
     </div>
 
     <div class="course-cards mt-2">
@@ -24,6 +26,7 @@
         "
         [course]="course"
         (edit)="editCourse($event)"
+        (delete)="deleteCourse($event)"
       ></app-course-card>
     </div>
 
@@ -42,3 +45,5 @@
     </div>
   </div>
 </div>
+
+<app-add-course-page *ngIf="isAddingCourse"></app-add-course-page>

@@ -5,6 +5,7 @@ import { BreadcrumbComponent } from './breadcrumb.component';
 describe('BreadcrumbComponent', () => {
   let component: BreadcrumbComponent;
   let fixture: ComponentFixture<BreadcrumbComponent>;
+  let template: HTMLElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -13,6 +14,7 @@ describe('BreadcrumbComponent', () => {
 
     fixture = TestBed.createComponent(BreadcrumbComponent);
     component = fixture.componentInstance;
+    template = fixture.nativeElement as HTMLElement;
   });
 
   it('should create', () => {
@@ -20,7 +22,6 @@ describe('BreadcrumbComponent', () => {
   });
 
   it("should contain 'Courses'", () => {
-    const template = fixture.nativeElement as HTMLElement;
     expect(template.querySelector('.breadcrumb a')?.textContent).toBe(
       'Courses'
     );
