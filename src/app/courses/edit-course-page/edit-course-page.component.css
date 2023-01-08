@@ -1,0 +1,23 @@
+.edit-course-page {
+  display: flex;
+  justify-content: center;
+}
+
+.form-card {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  width: 800px;
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+@media (max-width: 420px) {
+  .form-card {
+    width: 94%;
+  }
+}
+
+.label-text {
+  font-weight: 500;
+}

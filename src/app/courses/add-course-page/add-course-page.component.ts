@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { Course } from 'src/app/models/course.model';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { CourseService } from 'src/app/services/course.service';
 
 @Component({
   selector: 'app-add-course-page',
@@ -12,7 +15,11 @@ export class AddCoursePageComponent {
   duration = 0;
   date!: Date;
 
-  constructor(authenticationService: AuthenticationService) {
+  constructor(
+    authenticationService: AuthenticationService,
+    private courseService: CourseService,
+    private router: Router
+  ) {
     console.log(authenticationService);
   }
 
@@ -33,10 +40,21 @@ export class AddCoursePageComponent {
   }
 
   save() {
-    console.log(this.title, this.description, this.duration, this.date);
+    const course: Course = {
+      id: Math.random(),
+      title: this.title,
+      description: this.description,
+      duration: this.duration,
+      creationDate: this.date,
+      topRated: true,
+    };
+
+    this.courseService.createCourse(course);
+
+    this.router.navigate(['courses']);
   }
 
   cancel() {
-    console.log('cancelled');
+    this.router.navigate(['courses']);
   }
 }

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
@@ -13,6 +14,7 @@ import { IfNotAuthenticatedDirective } from './directives/if-not-authenticated.d
 import { OrderByPipe } from './pipes/order-by.pipe';
 import { CourseDurationInputComponent } from './course-duration-input/course-duration-input.component';
 import { CourseDateInputComponent } from './course-date-input/course-date-input.component';
+import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 
 @NgModule({
   declarations: [
@@ -26,8 +28,9 @@ import { CourseDateInputComponent } from './course-date-input/course-date-input.
     CourseDurationInputComponent,
     CourseDateInputComponent,
     LogoComponent,
+    BreadcrumbComponent,
   ],
-  imports: [CommonModule, FormsModule, FontAwesomeModule],
+  imports: [CommonModule, FormsModule, FontAwesomeModule, RouterModule],
   exports: [
     PromptModalComponent,
     ChangeBorderColorDirective,
@@ -41,6 +44,8 @@ import { CourseDateInputComponent } from './course-date-input/course-date-input.
     CourseDurationInputComponent,
     CourseDateInputComponent,
     LogoComponent,
+    BreadcrumbComponent,
+    RouterModule,
   ],
 })
 export class SharedModule {}

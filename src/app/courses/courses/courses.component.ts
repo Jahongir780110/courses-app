@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Course } from 'src/app/models/course.model';
 import { CourseService } from 'src/app/services/course.service';
 import { FilterPipe } from 'src/app/shared/pipes/filter.pipe';
@@ -12,11 +13,12 @@ import { FilterPipe } from 'src/app/shared/pipes/filter.pipe';
 export class CoursesComponent implements OnInit {
   searchText = '';
   filteredCourses: Course[] = [];
-  isAddingCourse = false;
 
   constructor(
     private filterPipe: FilterPipe,
-    private courseService: CourseService
+    private courseService: CourseService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -38,8 +40,10 @@ export class CoursesComponent implements OnInit {
     console.log('log more');
   }
 
-  editCourse(courseId: number) {
-    console.log(courseId);
+  showEditCoursePage(courseId: number) {
+    this.router.navigate([courseId], {
+      relativeTo: this.route,
+    });
   }
 
   deleteCourse(courseId: number) {
@@ -47,7 +51,9 @@ export class CoursesComponent implements OnInit {
   }
 
   showAddCoursePage() {
-    this.isAddingCourse = true;
+    this.router.navigate(['new'], {
+      relativeTo: this.route,
+    });
   }
 
   identifyCourse(index: number, course: Course) {

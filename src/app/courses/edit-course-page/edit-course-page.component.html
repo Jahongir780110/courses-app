@@ -1,13 +1,13 @@
 <app-breadcrumb
   [routes]="[
     { name: 'Courses', absolutePath: '/courses' },
-    { name: 'New course', absolutePath: '/courses/new' }
+    { name: oldCourse?.title, absolutePath: '/courses/' + oldCourse?.id }
   ]"
 ></app-breadcrumb>
 
-<div class="add-course-page">
+<div class="edit-course-page">
   <div class="form-card p-3">
-    <h3 class="title">New course</h3>
+    <h3 class="title">Edit course</h3>
 
     <form>
       <div class="title mt-3">
@@ -49,10 +49,12 @@
       </div>
 
       <app-course-duration-input
+        [value]="duration"
         (changed)="changeDuration($event)"
       ></app-course-duration-input>
 
       <app-course-date-input
+        [value]="date"
         (changed)="changeDate($event)"
       ></app-course-date-input>
 

@@ -1,0 +1,9 @@
+<div class="breadcrumb py-3 mb-0">
+  <nav aria-label="breadcrumb" class="container">
+    <ol class="breadcrumb mb-0">
+      <li class="breadcrumb-item" *ngFor="let route of routes">
+        <a [routerLink]="route.absolutePath">{{ route.name }}</a>
+      </li>
+    </ol>
+  </nav>
+</div>

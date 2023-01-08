@@ -12,7 +12,7 @@ export class FilterPipe implements PipeTransform {
 
     const copiedCourses = [...value];
     const filteredCourses = copiedCourses.filter((course) =>
-      course.title.includes(filterText)
+      course.title.toLowerCase().includes(filterText.toLowerCase())
     );
     return filteredCourses;
   }

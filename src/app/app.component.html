@@ -1,9 +1,7 @@
 <app-header></app-header>
 
 <main>
-  <app-breadcrumb *appIfAuthenticated></app-breadcrumb>
-  <app-courses *appIfAuthenticated></app-courses>
-  <app-login-page *appIfNotAuthenticated></app-login-page>
+  <router-outlet></router-outlet>
 </main>
 
 <app-footer></app-footer>

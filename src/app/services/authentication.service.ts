@@ -1,4 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { User } from '../models/user.model';
 
 @Injectable({
@@ -9,6 +10,8 @@ export class AuthenticationService {
   token = '';
 
   authenticationChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  constructor(private router: Router) {}
 
   isAuthenticated() {
     return this.token !== '' ? true : false;
@@ -30,6 +33,8 @@ export class AuthenticationService {
     localStorage.removeItem('token');
 
     this.authenticationChanged.emit(false);
+
+    this.router.navigate(['/login']);
   }
 
   getUser() {

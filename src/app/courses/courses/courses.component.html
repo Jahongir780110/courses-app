@@ -1,4 +1,8 @@
-<div *ngIf="!isAddingCourse" class="courses">
+<app-breadcrumb
+  [routes]="[{ name: 'Courses', absolutePath: '/courses' }]"
+></app-breadcrumb>
+
+<div class="courses">
   <div class="container">
     <div class="search d-flex mt-3">
       <input
@@ -25,7 +29,7 @@
           trackBy: identifyCourse
         "
         [course]="course"
-        (edit)="editCourse($event)"
+        (edit)="showEditCoursePage($event)"
         (delete)="deleteCourse($event)"
       ></app-course-card>
     </div>
@@ -45,5 +49,3 @@
     </div>
   </div>
 </div>
-
-<app-add-course-page *ngIf="isAddingCourse"></app-add-course-page>

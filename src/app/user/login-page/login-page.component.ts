@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { User } from 'src/app/models/user.model';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 
@@ -11,7 +12,10 @@ export class LoginPageComponent {
   email = '';
   password = '';
 
-  constructor(private authenticationService: AuthenticationService) {}
+  constructor(
+    private authenticationService: AuthenticationService,
+    private router: Router
+  ) {}
 
   login(e: Event) {
     e.preventDefault();
@@ -23,6 +27,6 @@ export class LoginPageComponent {
     };
     this.authenticationService.login(user);
 
-    console.log('logged in successfully');
+    this.router.navigate(['/courses']);
   }
 }

@@ -1,14 +1,14 @@
 <header class="header">
   <nav class="navbar navbar-expand py-0">
     <div class="container">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" routerLink="/">
         <app-logo></app-logo>
         <span class="brand-text ms-2">VIDEO COURSE</span>
       </a>
 
       <ul class="navbar-nav" *appIfAuthenticated>
         <li class="nav-item">
-          <a class="nav-link" href="#">
+          <a class="nav-link" routerLink="/login">
             <fa-icon [icon]="faUser"></fa-icon>
             <span class="nav-item__text ms-1">User login</span>
           </a>
