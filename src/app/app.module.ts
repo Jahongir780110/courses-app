@@ -8,7 +8,7 @@ import { UserModule } from './user/user.module';
 import { AppComponent } from './app.component';
 import { NotFoundComponent } from './core/not-found/not-found.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',

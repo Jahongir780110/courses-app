@@ -30,8 +30,6 @@ export class EditCoursePageComponent implements OnInit {
     this.description = course.description;
     this.duration = course.duration;
     this.date = course.creationDate;
-
-    console.log(this.route);
   }
 
   changeTitle(e: Event) {

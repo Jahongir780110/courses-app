@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Course } from 'src/app/models/course.model';
-import { AuthenticationService } from 'src/app/services/authentication.service';
 import { CourseService } from 'src/app/services/course.service';
 
 @Component({
@@ -15,13 +14,7 @@ export class AddCoursePageComponent {
   duration = 0;
   date!: Date;
 
-  constructor(
-    authenticationService: AuthenticationService,
-    private courseService: CourseService,
-    private router: Router
-  ) {
-    console.log(authenticationService);
-  }
+  constructor(private courseService: CourseService, private router: Router) {}
 
   changeTitle(e: Event) {
     this.title = (e.target as HTMLInputElement).value;

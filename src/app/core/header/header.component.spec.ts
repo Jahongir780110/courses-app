@@ -1,9 +1,19 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 import { User } from 'src/app/models/user.model';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 import { HeaderComponent } from './header.component';
+
+import { Location } from '@angular/common';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
+import { routes } from 'src/app/app.module';
 
 describe('HeaderComponent', () => {
   let fixture: ComponentFixture<HeaderComponent>;
@@ -12,9 +22,12 @@ describe('HeaderComponent', () => {
   let authService: AuthenticationService;
   let user: User;
 
+  let router: Router;
+  let location: Location;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SharedModule],
+      imports: [SharedModule, RouterTestingModule.withRoutes(routes)],
       declarations: [HeaderComponent],
     }).compileComponents();
 
@@ -22,6 +35,9 @@ describe('HeaderComponent', () => {
     component = fixture.componentInstance;
     template = fixture.nativeElement as HTMLElement;
     authService = TestBed.inject(AuthenticationService);
+
+    location = TestBed.inject(Location);
+    router = TestBed.inject(Router);
 
     user = {
       id: 1,
@@ -56,15 +72,19 @@ describe('HeaderComponent', () => {
     ).toBe('Log off');
   });
 
-  it('should log off if "Log off" button is clicked', () => {
+  it('should log off and redirect to login page if "Log off" button is clicked', fakeAsync(() => {
     authService.login(user);
     fixture.detectChanges();
 
     const logOffBtn = template
       .querySelectorAll('.navbar-nav .nav-item')[1]
       .querySelector('span');
+
     logOffBtn?.dispatchEvent(new Event('click'));
+    tick();
 
     expect(authService.isAuthenticated()).toBeFalse();
-  });
+
+    expect(location.path()).toBe('/login');
+  }));
 });

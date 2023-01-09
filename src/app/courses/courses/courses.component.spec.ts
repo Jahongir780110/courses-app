@@ -1,5 +1,12 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
+import { Location } from '@angular/common';
+import { RouterTestingModule } from '@angular/router/testing';
+import { routes } from 'src/app/app.module';
 import { CourseCardComponent } from 'src/app/courses/course-card/course-card.component';
 import { OrderByPipe } from 'src/app/shared/pipes/order-by.pipe';
 import { SharedModule } from 'src/app/shared/shared.module';
@@ -10,17 +17,19 @@ describe('CoursesComponent', () => {
   let component: CoursesComponent;
   let fixture: ComponentFixture<CoursesComponent>;
   let template: HTMLElement;
+  let location: Location;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SharedModule],
+      imports: [SharedModule, RouterTestingModule.withRoutes(routes)],
       declarations: [CoursesComponent, CourseCardComponent],
-      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CoursesComponent);
     component = fixture.componentInstance;
     template = fixture.nativeElement;
+
+    location = TestBed.inject(Location);
   });
 
   it('should create', () => {
@@ -129,20 +138,20 @@ describe('CoursesComponent', () => {
     expect(template.querySelector('.no-data')).toBeTruthy();
   });
 
-  it('should log course id when editCourse() is called', () => {
-    const spy = spyOn(window.console, 'log');
+  it('should redirect to edit-course page when showEditCourse() is called', fakeAsync(() => {
+    component.showEditCoursePage(1);
 
-    component.editCourse(55);
-    expect(spy).toHaveBeenCalledWith(55);
-  });
+    tick();
 
-  it('should show add-course page if add-course button is clicked', () => {
-    fixture.detectChanges();
+    expect(location.path()).toBe('/1');
+  }));
 
+  it('should redirect to add-course page if "add course" button is clicked', fakeAsync(() => {
     const addCourseBtn = template.querySelector('.add-course button');
     addCourseBtn?.dispatchEvent(new Event('click'));
-    fixture.detectChanges();
 
-    expect(template.querySelector('app-add-course-page')).toBeTruthy();
-  });
+    tick();
+
+    expect(location.path()).toBe('/new');
+  }));
 });
