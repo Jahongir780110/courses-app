@@ -12,16 +12,26 @@ import { OrderByPipe } from 'src/app/shared/pipes/order-by.pipe';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 import { CoursesComponent } from './courses.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CourseService } from 'src/app/services/course.service';
+import { of, tap } from 'rxjs';
+import { Course } from 'src/app/models/course.model';
 
 describe('CoursesComponent', () => {
   let component: CoursesComponent;
   let fixture: ComponentFixture<CoursesComponent>;
   let template: HTMLElement;
+  let courseService: CourseService;
   let location: Location;
+  let mockCourses: Course[];
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SharedModule, RouterTestingModule.withRoutes(routes)],
+      imports: [
+        SharedModule,
+        RouterTestingModule.withRoutes(routes),
+        HttpClientTestingModule,
+      ],
       declarations: [CoursesComponent, CourseCardComponent],
     }).compileComponents();
 
@@ -29,85 +39,82 @@ describe('CoursesComponent', () => {
     component = fixture.componentInstance;
     template = fixture.nativeElement;
 
+    courseService = TestBed.inject(CourseService);
     location = TestBed.inject(Location);
+
+    mockCourses = [
+      {
+        id: 1,
+        title: 'title',
+        description: 'description',
+        creationDate: new Date(),
+        duration: 12,
+        topRated: true,
+        authors: [],
+      },
+      {
+        id: 2,
+        title: 'title2',
+        description: 'description2',
+        creationDate: new Date(),
+        duration: 134,
+        topRated: false,
+        authors: [],
+      },
+      {
+        id: 3,
+        title: 'title3',
+        description: 'description3',
+        creationDate: new Date(),
+        duration: 312,
+        topRated: true,
+        authors: [],
+      },
+    ];
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have all course data', () => {
+  it('should show call getCourses() in beginning', () => {
+    const courseSpy = spyOn(courseService, 'getCourses').and.returnValue(
+      of(mockCourses).pipe(
+        tap((courses) => {
+          courseService.courses = courses;
+        })
+      )
+    );
+
     fixture.detectChanges();
-    expect(component.filteredCourses.length).toBeGreaterThan(0);
+
+    expect(courseSpy).toHaveBeenCalled();
   });
 
-  it('should show courses ordered by creation date', () => {
-    fixture.detectChanges();
-    const orderByPipe = new OrderByPipe();
-    const orderedCourses = orderByPipe.transform(component.filteredCourses);
+  it('should filter courses once search button is clicked and when search text exists', () => {
+    const courseSpy = spyOn(courseService, 'searchCourses');
 
-    expect(orderedCourses).toEqual([
-      {
-        id: 2,
-        title: 'Video Course 2. Name tag',
-        duration: 27,
-        creationDate: new Date(2023, 2, 12),
-        description:
-          "Learn about where you can find course desciptions, what information they include, how they work, and details about various components of a coursedescription. Course descriptions report informationa bout a universityor colleges classes. They're published both in course catalogs thatoutline degree requirements and in course schedules that containdescriptions for all courses offered during.",
-        topRated: false,
-      },
-      {
-        id: 1,
-        title: 'Video Course 1. Name tag',
-        duration: 88,
-        creationDate: new Date(2022, 11, 29),
-        description:
-          "Learn about where you can find course desciptions, what information they include, how they work, and details about various components of a coursedescription. Course descriptions report informationa bout a universityor colleges classes. They're published both in course catalogs thatoutline degree requirements and in course schedules that containdescriptions for all courses offered during.",
-        topRated: true,
-      },
-      {
-        id: 3,
-        title: 'Video Course 3. Name tag',
-        duration: 125,
-        creationDate: new Date(2018, 8, 3),
-        description:
-          "Learn about where you can find course desciptions, what information they include, how they work, and details about various components of a coursedescription. Course descriptions report informationa bout a universityor colleges classes. They're published both in course catalogs thatoutline degree requirements and in course schedules that containdescriptions for all courses offered during.",
-        topRated: true,
-      },
-    ]);
-  });
-
-  it('should filter courses once search button is clicked', () => {
+    component.searchText = 'test';
     fixture.detectChanges();
 
-    const searchInput = template.querySelector(
-      '.search input'
-    ) as HTMLInputElement;
     const searchBtn = template.querySelector(
       '.search button'
     ) as HTMLButtonElement;
 
-    searchInput.value = '2';
-    searchInput.dispatchEvent(new Event('input'));
-
     searchBtn.dispatchEvent(new Event('click'));
 
-    expect(component.filteredCourses).toEqual([
-      {
-        id: 2,
-        title: 'Video Course 2. Name tag',
-        duration: 27,
-        creationDate: new Date(2023, 2, 12),
-        description:
-          "Learn about where you can find course desciptions, what information they include, how they work, and details about various components of a coursedescription. Course descriptions report informationa bout a universityor colleges classes. They're published both in course catalogs thatoutline degree requirements and in course schedules that containdescriptions for all courses offered during.",
-        topRated: false,
-      },
-    ]);
+    expect(courseSpy).toHaveBeenCalled();
   });
 
   it('shouldn\'t show "log more" if there are no courses', () => {
-    fixture.detectChanges();
-    component.filteredCourses = [];
+    spyOn(courseService, 'getCourses').and.returnValue(
+      of([]).pipe(
+        tap((courses) => {
+          courseService.courses = courses;
+        })
+      )
+    );
+
     fixture.detectChanges();
 
     const loadMoreBtn = template.querySelector(
@@ -117,8 +124,15 @@ describe('CoursesComponent', () => {
     expect(loadMoreBtn).not.toBeTruthy();
   });
 
-  it('should console log "log more" once clicking "LOAD MORE" button', () => {
-    const spy = spyOn(window.console, 'log');
+  it('should call getCourses() when "load more" button is clicked', () => {
+    const coursesSpy = spyOn(courseService, 'getCourses').and.returnValue(
+      of(mockCourses).pipe(
+        tap((courses) => {
+          courseService.courses = courses;
+        })
+      )
+    );
+
     fixture.detectChanges();
 
     const loadMoreBtn = template.querySelector(
@@ -126,13 +140,19 @@ describe('CoursesComponent', () => {
     ) as HTMLButtonElement;
 
     loadMoreBtn.dispatchEvent(new Event('click'));
-    expect(spy).toHaveBeenCalledWith('log more');
+
+    expect(coursesSpy).toHaveBeenCalled();
   });
 
   it('should show "no courses" text if there are no courses', () => {
-    fixture.detectChanges();
+    spyOn(courseService, 'getCourses').and.returnValue(
+      of([]).pipe(
+        tap((courses) => {
+          courseService.courses = courses;
+        })
+      )
+    );
 
-    component.filteredCourses = [];
     fixture.detectChanges();
 
     expect(template.querySelector('.no-data')).toBeTruthy();
@@ -153,5 +173,25 @@ describe('CoursesComponent', () => {
     tick();
 
     expect(location.path()).toBe('/new');
+  }));
+
+  it('should call removeCourse() if deleteCourse() method is fired', fakeAsync(() => {
+    spyOn(courseService, 'getCourses').and.returnValue(
+      of(mockCourses).pipe(
+        tap((courses) => {
+          courseService.courses = courses;
+        })
+      )
+    );
+    fixture.detectChanges();
+    console.log('component', component);
+
+    const courseSpy = spyOn(courseService, 'removeCourse').and.returnValue(
+      of()
+    );
+
+    component.deleteCourse(1);
+
+    expect(courseSpy).toHaveBeenCalled();
   }));
 });

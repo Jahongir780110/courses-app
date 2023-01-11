@@ -11,33 +11,31 @@ import { FilterPipe } from 'src/app/shared/pipes/filter.pipe';
   providers: [FilterPipe],
 })
 export class CoursesComponent implements OnInit {
+  coursesCount = 5;
   searchText = '';
-  filteredCourses: Course[] = [];
 
   constructor(
-    private filterPipe: FilterPipe,
-    private courseService: CourseService,
+    public courseService: CourseService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
-    this.filteredCourses = this.courseService.getCourses();
-
-    this.courseService.coursesChanged.subscribe((courses) => {
-      this.filteredCourses = courses;
-    });
+    this.courseService.getCourses(0, 5).subscribe();
   }
 
   searchCourses() {
-    this.filteredCourses = this.filterPipe.transform(
-      this.courseService.getCourses(),
-      this.searchText
-    );
+    if (!this.searchText.length) {
+      this.courseService.getCourses(0, this.coursesCount).subscribe();
+      return;
+    }
+
+    this.courseService.searchCourses(this.searchText).subscribe();
   }
 
   loadMoreCourses() {
-    console.log('log more');
+    this.coursesCount += 5;
+    this.courseService.getCourses(0, this.coursesCount).subscribe();
   }
 
   showEditCoursePage(courseId: number) {
@@ -47,7 +45,9 @@ export class CoursesComponent implements OnInit {
   }
 
   deleteCourse(courseId: number) {
-    this.courseService.removeCourse(courseId);
+    this.courseService.removeCourse(courseId).subscribe(() => {
+      this.courseService.getCourses(0, this.coursesCount).subscribe();
+    });
   }
 
   showAddCoursePage() {

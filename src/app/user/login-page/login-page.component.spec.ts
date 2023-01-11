@@ -11,6 +11,8 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 import { LoginPageComponent } from './login-page.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { routes } from 'src/app/app.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of, tap } from 'rxjs';
 
 describe('LoginPageComponent', () => {
   let component: LoginPageComponent;
@@ -23,7 +25,11 @@ describe('LoginPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [LoginPageComponent],
-      imports: [FormsModule, RouterTestingModule.withRoutes(routes)],
+      imports: [
+        FormsModule,
+        RouterTestingModule.withRoutes(routes),
+        HttpClientTestingModule,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginPageComponent);
@@ -39,7 +45,15 @@ describe('LoginPageComponent', () => {
   });
 
   it('should store user info and redirect to "courses" page once login button is clicked', fakeAsync(() => {
-    component.email = 'sampleemail@gmail.com';
+    spyOn(authService, 'login').and.returnValue(
+      of({ token: 'fdas' }).pipe(
+        tap((data) => {
+          authService.token = data.token;
+        })
+      )
+    );
+
+    component.login = 'sampleemail@gmail.com';
     component.password = 'sample password';
     fixture.detectChanges();
 

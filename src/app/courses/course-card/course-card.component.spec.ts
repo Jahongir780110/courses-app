@@ -26,10 +26,11 @@ describe('CourseCardComponent', () => {
     mockCourse = {
       id: 1,
       title: 'Sample title',
+      description: 'Sample description',
       duration: 12,
       creationDate: new Date(),
-      description: 'Sample description',
       topRated: true,
+      authors: [],
     };
   });
 

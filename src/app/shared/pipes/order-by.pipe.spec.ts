@@ -1,3 +1,4 @@
+import { Course } from 'src/app/models/course.model';
 import { OrderByPipe } from './order-by.pipe';
 
 describe('OrderByPipe', () => {
@@ -12,7 +13,7 @@ describe('OrderByPipe', () => {
   });
 
   it('should order by creation date', () => {
-    const mockCourses = [
+    const mockCourses: Course[] = [
       {
         id: 1,
         title: 'Video Course 1. Name tag',
@@ -21,6 +22,7 @@ describe('OrderByPipe', () => {
         description:
           "Learn about where you can find course desciptions, what information they include, how they work, and details about various components of a coursedescription. Course descriptions report informationa bout a universityor colleges classes. They're published both in course catalogs thatoutline degree requirements and in course schedules that containdescriptions for all courses offered during.",
         topRated: true,
+        authors: [],
       },
       {
         id: 2,
@@ -30,6 +32,7 @@ describe('OrderByPipe', () => {
         description:
           "Learn about where you can find course desciptions, what information they include, how they work, and details about various components of a coursedescription. Course descriptions report informationa bout a universityor colleges classes. They're published both in course catalogs thatoutline degree requirements and in course schedules that containdescriptions for all courses offered during.",
         topRated: false,
+        authors: [],
       },
       {
         id: 3,
@@ -39,6 +42,7 @@ describe('OrderByPipe', () => {
         description:
           "Learn about where you can find course desciptions, what information they include, how they work, and details about various components of a coursedescription. Course descriptions report informationa bout a universityor colleges classes. They're published both in course catalogs thatoutline degree requirements and in course schedules that containdescriptions for all courses offered during.",
         topRated: true,
+        authors: [],
       },
     ];
     const orderedCourses = orderByPipe.transform(mockCourses);
@@ -52,6 +56,7 @@ describe('OrderByPipe', () => {
         description:
           "Learn about where you can find course desciptions, what information they include, how they work, and details about various components of a coursedescription. Course descriptions report informationa bout a universityor colleges classes. They're published both in course catalogs thatoutline degree requirements and in course schedules that containdescriptions for all courses offered during.",
         topRated: false,
+        authors: [],
       },
       {
         id: 1,
@@ -61,6 +66,7 @@ describe('OrderByPipe', () => {
         description:
           "Learn about where you can find course desciptions, what information they include, how they work, and details about various components of a coursedescription. Course descriptions report informationa bout a universityor colleges classes. They're published both in course catalogs thatoutline degree requirements and in course schedules that containdescriptions for all courses offered during.",
         topRated: true,
+        authors: [],
       },
       {
         id: 3,
@@ -70,6 +76,7 @@ describe('OrderByPipe', () => {
         description:
           "Learn about where you can find course desciptions, what information they include, how they work, and details about various components of a coursedescription. Course descriptions report informationa bout a universityor colleges classes. They're published both in course catalogs thatoutline degree requirements and in course schedules that containdescriptions for all courses offered during.",
         topRated: true,
+        authors: [],
       },
     ]);
   });

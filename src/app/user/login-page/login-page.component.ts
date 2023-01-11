@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from 'src/app/models/user.model';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
@@ -9,24 +8,28 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
   styleUrls: ['./login-page.component.css'],
 })
 export class LoginPageComponent {
-  email = '';
-  password = '';
+  login = 'flastname';
+  password = 'flastname';
+  error: null | string = null;
 
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router
   ) {}
 
-  login(e: Event) {
+  loginHandler(e: Event) {
     e.preventDefault();
 
-    const user: User = {
-      id: Math.random(),
-      email: this.email,
-      password: this.password,
-    };
-    this.authenticationService.login(user);
-
-    this.router.navigate(['/courses']);
+    this.authenticationService.login(this.login, this.password).subscribe({
+      next: () => {
+        this.router.navigate(['/courses']);
+      },
+      error: (errorObject) => {
+        this.error =
+          typeof errorObject.error === 'string'
+            ? errorObject.error
+            : 'Oops! Something went wrong!';
+      },
+    });
   }
 }

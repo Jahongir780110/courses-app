@@ -13,7 +13,7 @@ export class EditCoursePageComponent implements OnInit {
   description = '';
   duration = 0;
   date!: Date;
-  oldCourse: Course | null = null;
+  oldCourse!: Course;
 
   constructor(
     private courseService: CourseService,
@@ -23,13 +23,15 @@ export class EditCoursePageComponent implements OnInit {
 
   ngOnInit(): void {
     const courseId = this.route.snapshot.paramMap.get('courseId') as string;
-    const course = this.courseService.getCourse(+courseId) as Course;
-    this.oldCourse = course;
 
-    this.title = course.title;
-    this.description = course.description;
-    this.duration = course.duration;
-    this.date = course.creationDate;
+    this.courseService.getCourse(+courseId).subscribe((course) => {
+      this.oldCourse = course;
+
+      this.title = course.title;
+      this.description = course.description;
+      this.duration = course.duration;
+      this.date = course.creationDate;
+    });
   }
 
   changeTitle(e: Event) {
@@ -49,19 +51,19 @@ export class EditCoursePageComponent implements OnInit {
   }
 
   save() {
-    if (this.oldCourse === null) return;
-
-    const course: Course = {
-      ...this.oldCourse,
-      title: this.title,
-      description: this.description,
-      duration: this.duration,
-      creationDate: this.date,
-    };
-
-    this.courseService.updateCourse(course);
-
-    this.router.navigate(['courses']);
+    this.courseService
+      .updateCourse(
+        this.oldCourse.id,
+        this.title,
+        this.description,
+        this.duration,
+        this.date,
+        this.oldCourse.topRated,
+        []
+      )
+      .subscribe(() => {
+        this.router.navigate(['courses']);
+      });
   }
 
   cancel() {

@@ -4,7 +4,6 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-import { User } from 'src/app/models/user.model';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { SharedModule } from 'src/app/shared/shared.module';
 
@@ -12,22 +11,26 @@ import { HeaderComponent } from './header.component';
 
 import { Location } from '@angular/common';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Router } from '@angular/router';
 import { routes } from 'src/app/app.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of, tap } from 'rxjs';
 
 describe('HeaderComponent', () => {
   let fixture: ComponentFixture<HeaderComponent>;
   let component: HeaderComponent;
   let template: HTMLElement;
   let authService: AuthenticationService;
-  let user: User;
+  let userLogin: { login: string; password: string };
 
-  let router: Router;
   let location: Location;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SharedModule, RouterTestingModule.withRoutes(routes)],
+      imports: [
+        SharedModule,
+        RouterTestingModule.withRoutes(routes),
+        HttpClientTestingModule,
+      ],
       declarations: [HeaderComponent],
     }).compileComponents();
 
@@ -37,11 +40,9 @@ describe('HeaderComponent', () => {
     authService = TestBed.inject(AuthenticationService);
 
     location = TestBed.inject(Location);
-    router = TestBed.inject(Router);
 
-    user = {
-      id: 1,
-      email: 'sampleemail@gmail.com',
+    userLogin = {
+      login: 'sampleemail@gmail.com',
       password: '123456',
     };
   });
@@ -55,7 +56,15 @@ describe('HeaderComponent', () => {
   });
 
   it("should contain 'user login' if authenticated", () => {
-    authService.login(user);
+    spyOn(authService, 'login').and.returnValue(
+      of({ token: 'fdas' }).pipe(
+        tap((data) => {
+          authService.token = data.token;
+        })
+      )
+    );
+
+    authService.login(userLogin.login, userLogin.password).subscribe();
     fixture.detectChanges();
 
     expect(
@@ -64,7 +73,15 @@ describe('HeaderComponent', () => {
   });
 
   it("should contain 'log off' if authenticated", () => {
-    authService.login(user);
+    spyOn(authService, 'login').and.returnValue(
+      of({ token: 'fdas' }).pipe(
+        tap((data) => {
+          authService.token = data.token;
+        })
+      )
+    );
+
+    authService.login(userLogin.login, userLogin.password).subscribe();
     fixture.detectChanges();
 
     expect(
@@ -73,7 +90,15 @@ describe('HeaderComponent', () => {
   });
 
   it('should log off and redirect to login page if "Log off" button is clicked', fakeAsync(() => {
-    authService.login(user);
+    spyOn(authService, 'login').and.returnValue(
+      of({ token: 'fdas' }).pipe(
+        tap((data) => {
+          authService.token = data.token;
+        })
+      )
+    );
+
+    authService.login(userLogin.login, userLogin.password).subscribe();
     fixture.detectChanges();
 
     const logOffBtn = template

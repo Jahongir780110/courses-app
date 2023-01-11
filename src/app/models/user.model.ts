@@ -1,5 +1,9 @@
+import { Name } from './name.model';
+
 export interface User {
   id: number;
-  email: string;
+  token: string;
+  name: Name;
+  login: string;
   password: string;
 }

@@ -16,6 +16,8 @@ import { CoreModule } from './core/core.module';
 import { AppComponent } from './app.component';
 import { routes } from './app.module';
 import { AuthenticationService } from './services/authentication.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of, tap } from 'rxjs';
 
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
@@ -34,6 +36,7 @@ describe('AppComponent', () => {
         UserModule,
         CoursesModule,
         RouterTestingModule.withRoutes(routes),
+        HttpClientTestingModule,
       ],
       declarations: [AppComponent],
     }).compileComponents();
@@ -79,11 +82,15 @@ describe('AppComponent', () => {
   }));
 
   it('should redirect to courses page if you enter courses page with authenticating', fakeAsync(() => {
-    authService.login({
-      id: Math.random(),
-      email: 'sampleemail@gmail.com',
-      password: '123456',
-    });
+    spyOn(authService, 'login').and.returnValue(
+      of({ token: 'fdas' }).pipe(
+        tap((data) => {
+          authService.token = data.token;
+        })
+      )
+    );
+
+    authService.login('sampleemail@gmail.com', '123456').subscribe();
 
     router.navigate(['/courses']);
     tick();

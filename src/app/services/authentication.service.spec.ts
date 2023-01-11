@@ -1,30 +1,30 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Location } from '@angular/common';
-import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { routes } from '../app.module';
-import { User } from '../models/user.model';
 
 import { AuthenticationService } from './authentication.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of, tap } from 'rxjs';
 
 describe('AuthenticationService', () => {
   let authService: AuthenticationService;
-  let router: Router;
   let location: Location;
-  let mockUser: User;
+  let mockUserLogin: { login: string; password: string };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule.withRoutes(routes)],
+      imports: [
+        RouterTestingModule.withRoutes(routes),
+        HttpClientTestingModule,
+      ],
     });
 
     authService = TestBed.inject(AuthenticationService);
-    router = TestBed.inject(Router);
     location = TestBed.inject(Location);
 
-    mockUser = {
-      id: 1,
-      email: 'sampleemail@gmail.com',
+    mockUserLogin = {
+      login: 'sampleemail@gmail.com',
       password: '123456',
     };
   });
@@ -33,18 +33,23 @@ describe('AuthenticationService', () => {
     expect(authService).toBeTruthy();
   });
 
-  it('should show isAuthenticated correctly', () => {
-    let isAuthenticated = authService.isAuthenticated();
-    expect(isAuthenticated).toBeFalse;
+  it('should show isAuthenticated correctly', fakeAsync(() => {
+    expect(authService.isAuthenticated()).toBeFalse;
 
-    authService.login(mockUser);
+    spyOn(authService, 'login').and.returnValue(
+      of({ token: 'fdas' }).pipe(
+        tap((data) => {
+          authService.token = data.token;
+        })
+      )
+    );
 
-    isAuthenticated = authService.isAuthenticated();
-    expect(isAuthenticated).toBeTrue();
-  });
+    authService.login(mockUserLogin.login, mockUserLogin.password).subscribe();
+
+    expect(authService.isAuthenticated()).toBeTrue();
+  }));
 
   it('logout() should clear user info and token and redirect to "login" page', fakeAsync(() => {
-    authService.login(mockUser);
     authService.logout();
 
     tick();

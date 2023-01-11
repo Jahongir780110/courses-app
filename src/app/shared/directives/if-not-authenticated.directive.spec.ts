@@ -1,5 +1,12 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
+import { of, tap } from 'rxjs';
 import { AuthenticationService } from '../../services/authentication.service';
 import { IfNotAuthenticatedDirective } from './if-not-authenticated.directive';
 
@@ -13,24 +20,30 @@ class TestComponent {}
 describe('IfNotAuthenticatedDirective', () => {
   let fixture: ComponentFixture<TestComponent>;
   let template: HTMLElement;
-  let service: AuthenticationService;
+  let authService: AuthenticationService;
 
   beforeEach(() => {
     fixture = TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       declarations: [IfNotAuthenticatedDirective, TestComponent],
     }).createComponent(TestComponent);
 
     template = fixture.nativeElement as HTMLElement;
-    service = TestBed.inject(AuthenticationService);
+    authService = TestBed.inject(AuthenticationService);
   });
 
   it('shouln\'t show "Authenticated" text if authenticated', () => {
+    spyOn(authService, 'login').and.returnValue(
+      of({ token: 'fdas' }).pipe(
+        tap((data) => {
+          authService.token = data.token;
+          authService.authenticationChanged.emit(true);
+        })
+      )
+    );
+    authService.login('sampleemail@gmail.com', '123456').subscribe();
+
     fixture.detectChanges();
-    service.login({
-      id: 1,
-      email: 'sampleemail@gmail.com',
-      password: '123456',
-    });
 
     expect(template.querySelector('div')).not.toBeTruthy();
   });

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Course } from 'src/app/models/course.model';
 import { CourseService } from 'src/app/services/course.service';
 
 @Component({
@@ -12,7 +11,7 @@ export class AddCoursePageComponent {
   title = '';
   description = '';
   duration = 0;
-  date!: Date;
+  date = new Date();
 
   constructor(private courseService: CourseService, private router: Router) {}
 
@@ -33,18 +32,18 @@ export class AddCoursePageComponent {
   }
 
   save() {
-    const course: Course = {
-      id: Math.random(),
-      title: this.title,
-      description: this.description,
-      duration: this.duration,
-      creationDate: this.date,
-      topRated: true,
-    };
-
-    this.courseService.createCourse(course);
-
-    this.router.navigate(['courses']);
+    this.courseService
+      .createCourse(
+        this.title,
+        this.description,
+        this.date,
+        this.duration,
+        true,
+        []
+      )
+      .subscribe(() => {
+        this.router.navigate(['courses']);
+      });
   }
 
   cancel() {

@@ -1,3 +1,4 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IfAuthenticatedDirective } from './if-authenticated.directive';
@@ -13,6 +14,7 @@ describe('IfAuthenticatedDirective', () => {
 
   beforeEach(() => {
     fixture = TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       declarations: [IfAuthenticatedDirective, TestComponent],
     }).createComponent(TestComponent);
 

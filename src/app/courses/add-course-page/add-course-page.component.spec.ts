@@ -12,6 +12,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { AddCoursePageComponent } from './add-course-page.component';
 import { routes } from 'src/app/app.module';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of, tap } from 'rxjs';
 
 describe('AddCoursePageComponent', () => {
   let component: AddCoursePageComponent;
@@ -24,7 +26,11 @@ describe('AddCoursePageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SharedModule, RouterTestingModule.withRoutes(routes)],
+      imports: [
+        SharedModule,
+        RouterTestingModule.withRoutes(routes),
+        HttpClientTestingModule,
+      ],
       declarations: [],
     }).compileComponents();
 
@@ -43,30 +49,38 @@ describe('AddCoursePageComponent', () => {
 
   it('should create new course and redirect to "courses" page when "save" button is clicked', fakeAsync(() => {
     // we should be logged in before
-    authService.login({
-      id: Math.random(),
-      email: 'sampleemail@gmail.com',
-      password: '123456',
-    });
+    spyOn(authService, 'login').and.returnValue(
+      of({ token: 'fdas' }).pipe(
+        tap((data) => {
+          authService.token = data.token;
+        })
+      )
+    );
+    const courseSpy = spyOn(courseService, 'createCourse').and.returnValue(
+      of('test')
+    );
 
-    const oldCoursesCount = courseService.getCourses().length;
+    authService.login('sampleemail@gmail.com', '123456').subscribe();
 
     const saveBtn = template.querySelectorAll('.bottom button')[1];
     saveBtn.dispatchEvent(new Event('click'));
 
     tick();
 
-    expect(courseService.getCourses().length).toBe(oldCoursesCount + 1);
+    expect(courseSpy).toHaveBeenCalled();
     expect(location.path()).toBe('/courses');
   }));
 
   it('should redirect to "courses" page when "cancel" button is clicked', fakeAsync(() => {
     // we should be logged in before
-    authService.login({
-      id: Math.random(),
-      email: 'sampleemail@gmail.com',
-      password: '123456',
-    });
+    spyOn(authService, 'login').and.returnValue(
+      of({ token: 'fdas' }).pipe(
+        tap((data) => {
+          authService.token = data.token;
+        })
+      )
+    );
+    authService.login('sampleemail@gmail.com', '123456').subscribe();
 
     const cancelBtn = template.querySelectorAll('.bottom button')[0];
     cancelBtn.dispatchEvent(new Event('click'));
