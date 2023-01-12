@@ -31,7 +31,8 @@ describe('ChangeBorderColorDirective', () => {
   });
 
   it('should have green border color for recent course', () => {
-    component.date = new Date(2022, 11, 29);
+    const oneDayInMilliSeconds = 1000 * 60 * 60 * 24;
+    component.date = new Date(new Date().getTime() - oneDayInMilliSeconds);
     fixture.detectChanges();
     expect(template.querySelector('div')?.style.borderColor).toBe(
       'rgb(25, 135, 84)'

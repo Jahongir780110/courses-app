@@ -8,9 +8,11 @@
 
       <ul class="navbar-nav" *appIfAuthenticated>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/login">
+          <a class="nav-link">
             <fa-icon [icon]="faUser"></fa-icon>
-            <span class="nav-item__text ms-1">User login</span>
+            <span class="nav-item__text ms-1"
+              >{{ userFirstName }} {{ userLastName }}</span
+            >
           </a>
         </li>
 

@@ -4,10 +4,16 @@ import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { SharedModule } from '../shared/shared.module';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { SpinnerComponent } from './spinner/spinner.component';
 
 @NgModule({
-  declarations: [HeaderComponent, FooterComponent, NotFoundComponent],
+  declarations: [
+    HeaderComponent,
+    FooterComponent,
+    NotFoundComponent,
+    SpinnerComponent,
+  ],
   imports: [CommonModule, SharedModule],
-  exports: [HeaderComponent, FooterComponent],
+  exports: [HeaderComponent, FooterComponent, SpinnerComponent],
 })
 export class CoreModule {}

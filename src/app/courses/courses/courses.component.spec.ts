@@ -91,20 +91,23 @@ describe('CoursesComponent', () => {
     expect(courseSpy).toHaveBeenCalled();
   });
 
-  it('should filter courses once search button is clicked and when search text exists', () => {
-    const courseSpy = spyOn(courseService, 'searchCourses');
-
-    component.searchText = 'test';
+  it('should filter courses when search text length is more than 2', fakeAsync(() => {
     fixture.detectChanges();
 
-    const searchBtn = template.querySelector(
-      '.search button'
-    ) as HTMLButtonElement;
+    const courseSpy = spyOn(courseService, 'searchCourses').and.returnValue(
+      of()
+    );
 
-    searchBtn.dispatchEvent(new Event('click'));
+    const searchInput = template.querySelector(
+      '.search input'
+    ) as HTMLInputElement;
+    searchInput.value = 'test';
+
+    searchInput.dispatchEvent(new Event('keyup'));
+    tick(2000);
 
     expect(courseSpy).toHaveBeenCalled();
-  });
+  }));
 
   it('shouldn\'t show "log more" if there are no courses', () => {
     spyOn(courseService, 'getCourses').and.returnValue(
@@ -184,7 +187,6 @@ describe('CoursesComponent', () => {
       )
     );
     fixture.detectChanges();
-    console.log('component', component);
 
     const courseSpy = spyOn(courseService, 'removeCourse').and.returnValue(
       of()

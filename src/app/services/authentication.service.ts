@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs';
+import { Subject, tap } from 'rxjs';
 import { Name } from '../models/name.model';
 import { User } from '../models/user.model';
 
@@ -14,6 +14,7 @@ export class AuthenticationService {
   user: User | null = null;
 
   authenticationChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+  userDataChanged: Subject<User | null> = new Subject<User | null>();
 
   constructor(private router: Router, private http: HttpClient) {}
 
@@ -35,7 +36,16 @@ export class AuthenticationService {
 
             this.authenticationChanged.emit(true);
 
-            this.getUser().subscribe();
+            this.getUser().subscribe((data) => {
+              const user: User = {
+                id: data.id as number,
+                token: data.fakeToken as string,
+                name: data.name as Name,
+                login: data.login as string,
+                password: data.password as string,
+              };
+              this.userDataChanged.next(user);
+            });
           },
         })
       );
@@ -48,6 +58,7 @@ export class AuthenticationService {
     localStorage.removeItem('token');
 
     this.authenticationChanged.emit(false);
+    this.userDataChanged.next(null);
 
     this.router.navigate(['/login']);
   }

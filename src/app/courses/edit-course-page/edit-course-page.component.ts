@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Course } from 'src/app/models/course.model';
 import { CourseService } from 'src/app/services/course.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-edit-course-page',
@@ -13,10 +14,11 @@ export class EditCoursePageComponent implements OnInit {
   description = '';
   duration = 0;
   date!: Date;
-  oldCourse!: Course;
+  oldCourse: Course | null = null;
 
   constructor(
     private courseService: CourseService,
+    private loadingService: LoadingService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -51,18 +53,23 @@ export class EditCoursePageComponent implements OnInit {
   }
 
   save() {
+    this.loadingService.loadingChanged.next(true);
+
+    const oldCourseCopy = { ...this.oldCourse } as Course;
     this.courseService
       .updateCourse(
-        this.oldCourse.id,
+        oldCourseCopy.id,
         this.title,
         this.description,
         this.duration,
         this.date,
-        this.oldCourse.topRated,
+        oldCourseCopy.topRated,
         []
       )
       .subscribe(() => {
         this.router.navigate(['courses']);
+
+        this.loadingService.loadingChanged.next(false);
       });
   }
 

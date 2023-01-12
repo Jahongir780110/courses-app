@@ -9,11 +9,11 @@
         type="text"
         class="form-control"
         placeholder="Text to search"
-        [(ngModel)]="searchText"
+        #searchInput
       />
-      <button class="btn btn-success ms-2" (click)="searchCourses()">
+      <!-- <button class="btn btn-success ms-2" (click)="searchCourses()">
         Search
-      </button>
+      </button> -->
     </div>
 
     <div class="add-course mt-3 text-end">

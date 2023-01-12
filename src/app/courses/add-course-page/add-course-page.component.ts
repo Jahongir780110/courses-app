@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CourseService } from 'src/app/services/course.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-add-course-page',
@@ -13,7 +14,11 @@ export class AddCoursePageComponent {
   duration = 0;
   date = new Date();
 
-  constructor(private courseService: CourseService, private router: Router) {}
+  constructor(
+    private courseService: CourseService,
+    private loadingService: LoadingService,
+    private router: Router
+  ) {}
 
   changeTitle(e: Event) {
     this.title = (e.target as HTMLInputElement).value;
@@ -32,6 +37,8 @@ export class AddCoursePageComponent {
   }
 
   save() {
+    this.loadingService.loadingChanged.next(true);
+
     this.courseService
       .createCourse(
         this.title,
@@ -42,6 +49,8 @@ export class AddCoursePageComponent {
         []
       )
       .subscribe(() => {
+        this.loadingService.loadingChanged.next(false);
+
         this.router.navigate(['courses']);
       });
   }

@@ -55,7 +55,7 @@ describe('HeaderComponent', () => {
     expect(template.querySelector('app-logo')).toBeTruthy();
   });
 
-  it("should contain 'user login' if authenticated", () => {
+  it('should show user data correctly if authenticated', () => {
     spyOn(authService, 'login').and.returnValue(
       of({ token: 'fdas' }).pipe(
         tap((data) => {
@@ -65,11 +65,13 @@ describe('HeaderComponent', () => {
     );
 
     authService.login(userLogin.login, userLogin.password).subscribe();
+    component.userFirstName = 'First';
+    component.userLastName = 'Last';
     fixture.detectChanges();
 
     expect(
       template.querySelectorAll('.navbar-nav .nav-item span')[0].textContent
-    ).toBe('User login');
+    ).toBe('First Last');
   });
 
   it("should contain 'log off' if authenticated", () => {
