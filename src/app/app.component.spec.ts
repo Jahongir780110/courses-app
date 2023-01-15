@@ -15,18 +15,24 @@ import { CoreModule } from './core/core.module';
 
 import { AppComponent } from './app.component';
 import { routes } from './app.module';
-import { AuthenticationService } from './services/authentication.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { of, tap } from 'rxjs';
+
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let component: AppComponent;
   let template: HTMLElement;
-  let authService: AuthenticationService;
 
   let router: Router;
   let location: Location;
+
+  let mockStore: MockStore;
+  const initialState = {
+    auth: {
+      token: '',
+    },
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -39,6 +45,7 @@ describe('AppComponent', () => {
         HttpClientTestingModule,
       ],
       declarations: [AppComponent],
+      providers: [provideMockStore({ initialState })],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
@@ -47,7 +54,8 @@ describe('AppComponent', () => {
 
     location = TestBed.inject(Location);
     router = TestBed.inject(Router);
-    authService = TestBed.inject(AuthenticationService);
+
+    mockStore = TestBed.inject(MockStore);
   });
 
   it('should create the app', () => {
@@ -82,15 +90,11 @@ describe('AppComponent', () => {
   }));
 
   it('should redirect to courses page if you enter courses page with authenticating', fakeAsync(() => {
-    spyOn(authService, 'login').and.returnValue(
-      of({ token: 'fdas' }).pipe(
-        tap((data) => {
-          authService.token = data.token;
-        })
-      )
-    );
-
-    authService.login('sampleemail@gmail.com', '123456').subscribe();
+    mockStore.setState({
+      auth: {
+        token: 'token',
+      },
+    });
 
     router.navigate(['/courses']);
     tick();

@@ -8,8 +8,6 @@ import { AuthenticationService } from './authentication.service';
   providedIn: 'root',
 })
 export class CourseService {
-  courses: Course[] = [];
-
   constructor(
     private authService: AuthenticationService,
     private http: HttpClient

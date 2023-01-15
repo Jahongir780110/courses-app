@@ -4,25 +4,30 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-import { AuthenticationService } from 'src/app/services/authentication.service';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 import { HeaderComponent } from './header.component';
 
-import { Location } from '@angular/common';
 import { RouterTestingModule } from '@angular/router/testing';
 import { routes } from 'src/app/app.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { of, tap } from 'rxjs';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { cold } from 'jasmine-marbles';
+
+import * as AuthActions from '../../state/auth/auth.actions';
 
 describe('HeaderComponent', () => {
   let fixture: ComponentFixture<HeaderComponent>;
   let component: HeaderComponent;
   let template: HTMLElement;
-  let authService: AuthenticationService;
-  let userLogin: { login: string; password: string };
 
-  let location: Location;
+  let mockStore: MockStore;
+  const initialState = {
+    auth: {
+      user: null,
+      token: '',
+    },
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -32,19 +37,14 @@ describe('HeaderComponent', () => {
         HttpClientTestingModule,
       ],
       declarations: [HeaderComponent],
+      providers: [provideMockStore({ initialState })],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
     template = fixture.nativeElement as HTMLElement;
-    authService = TestBed.inject(AuthenticationService);
 
-    location = TestBed.inject(Location);
-
-    userLogin = {
-      login: 'sampleemail@gmail.com',
-      password: '123456',
-    };
+    mockStore = TestBed.inject(MockStore);
   });
 
   it('should create', () => {
@@ -56,17 +56,19 @@ describe('HeaderComponent', () => {
   });
 
   it('should show user data correctly if authenticated', () => {
-    spyOn(authService, 'login').and.returnValue(
-      of({ token: 'fdas' }).pipe(
-        tap((data) => {
-          authService.token = data.token;
-        })
-      )
-    );
+    mockStore.setState({
+      ...initialState,
+      auth: {
+        user: {
+          name: {
+            first: 'First',
+            last: 'Last',
+          },
+          token: '',
+        },
+      },
+    });
 
-    authService.login(userLogin.login, userLogin.password).subscribe();
-    component.userFirstName = 'First';
-    component.userLastName = 'Last';
     fixture.detectChanges();
 
     expect(
@@ -75,15 +77,18 @@ describe('HeaderComponent', () => {
   });
 
   it("should contain 'log off' if authenticated", () => {
-    spyOn(authService, 'login').and.returnValue(
-      of({ token: 'fdas' }).pipe(
-        tap((data) => {
-          authService.token = data.token;
-        })
-      )
-    );
+    mockStore.setState({
+      auth: {
+        user: {
+          name: {
+            first: 'First',
+            last: 'Last',
+          },
+          token: 'token',
+        },
+      },
+    });
 
-    authService.login(userLogin.login, userLogin.password).subscribe();
     fixture.detectChanges();
 
     expect(
@@ -91,27 +96,29 @@ describe('HeaderComponent', () => {
     ).toBe('Log off');
   });
 
-  it('should log off and redirect to login page if "Log off" button is clicked', fakeAsync(() => {
-    spyOn(authService, 'login').and.returnValue(
-      of({ token: 'fdas' }).pipe(
-        tap((data) => {
-          authService.token = data.token;
-        })
-      )
-    );
+  it('should dispatch logout action when "Log off" button is clicked', fakeAsync(() => {
+    mockStore.setState({
+      auth: {
+        user: {
+          name: {
+            first: 'First',
+            last: 'Last',
+          },
+          token: 'token',
+        },
+      },
+    });
 
-    authService.login(userLogin.login, userLogin.password).subscribe();
     fixture.detectChanges();
 
     const logOffBtn = template
       .querySelectorAll('.navbar-nav .nav-item')[1]
-      .querySelector('span');
+      .querySelector('span') as HTMLButtonElement;
 
-    logOffBtn?.dispatchEvent(new Event('click'));
+    logOffBtn.dispatchEvent(new Event('click'));
     tick();
 
-    expect(authService.isAuthenticated()).toBeFalse();
-
-    expect(location.path()).toBe('/login');
+    const expected = cold('a', { a: AuthActions.logout() });
+    expect(mockStore.scannedActions$).toBeObservable(expected);
   }));
 });

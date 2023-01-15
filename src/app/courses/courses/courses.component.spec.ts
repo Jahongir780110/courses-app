@@ -8,22 +8,41 @@ import { Location } from '@angular/common';
 import { RouterTestingModule } from '@angular/router/testing';
 import { routes } from 'src/app/app.module';
 import { CourseCardComponent } from 'src/app/courses/course-card/course-card.component';
-import { OrderByPipe } from 'src/app/shared/pipes/order-by.pipe';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 import { CoursesComponent } from './courses.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { CourseService } from 'src/app/services/course.service';
-import { of, tap } from 'rxjs';
 import { Course } from 'src/app/models/course.model';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { cold } from 'jasmine-marbles';
+
+import * as CoursesActions from '../../state/courses/courses.actions';
 
 describe('CoursesComponent', () => {
   let component: CoursesComponent;
   let fixture: ComponentFixture<CoursesComponent>;
   let template: HTMLElement;
-  let courseService: CourseService;
   let location: Location;
   let mockCourses: Course[];
+
+  let mockStore: MockStore;
+  const initialState = {
+    courses: {
+      courses: [],
+      editingCourse: {
+        id: 321,
+        title: 'title',
+        description: 'description',
+        duration: 123,
+        creationDate: new Date(),
+        topRated: true,
+        authors: [],
+      },
+    },
+    auth: {
+      token: 'token',
+    },
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -33,14 +52,16 @@ describe('CoursesComponent', () => {
         HttpClientTestingModule,
       ],
       declarations: [CoursesComponent, CourseCardComponent],
+      providers: [provideMockStore({ initialState })],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CoursesComponent);
     component = fixture.componentInstance;
     template = fixture.nativeElement;
 
-    courseService = TestBed.inject(CourseService);
     location = TestBed.inject(Location);
+
+    mockStore = TestBed.inject(MockStore);
 
     mockCourses = [
       {
@@ -77,26 +98,23 @@ describe('CoursesComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should show call getCourses() in beginning', () => {
-    const courseSpy = spyOn(courseService, 'getCourses').and.returnValue(
-      of(mockCourses).pipe(
-        tap((courses) => {
-          courseService.courses = courses;
-        })
-      )
-    );
+  it('should dispatch getCourses action in beginning', fakeAsync(() => {
+    const expected = cold('a', {
+      a: CoursesActions.getCourses({ start: 0, count: component.coursesCount }),
+    });
 
     fixture.detectChanges();
+    tick();
 
-    expect(courseSpy).toHaveBeenCalled();
-  });
+    expect(mockStore.scannedActions$).toBeObservable(expected);
+  }));
 
   it('should filter courses when search text length is more than 2', fakeAsync(() => {
     fixture.detectChanges();
 
-    const courseSpy = spyOn(courseService, 'searchCourses').and.returnValue(
-      of()
-    );
+    const expected = cold('a', {
+      a: CoursesActions.searchCourses({ fragment: 'test' }),
+    });
 
     const searchInput = template.querySelector(
       '.search input'
@@ -106,18 +124,10 @@ describe('CoursesComponent', () => {
     searchInput.dispatchEvent(new Event('keyup'));
     tick(2000);
 
-    expect(courseSpy).toHaveBeenCalled();
+    expect(mockStore.scannedActions$).toBeObservable(expected);
   }));
 
   it('shouldn\'t show "log more" if there are no courses', () => {
-    spyOn(courseService, 'getCourses').and.returnValue(
-      of([]).pipe(
-        tap((courses) => {
-          courseService.courses = courses;
-        })
-      )
-    );
-
     fixture.detectChanges();
 
     const loadMoreBtn = template.querySelector(
@@ -128,34 +138,44 @@ describe('CoursesComponent', () => {
   });
 
   it('should call getCourses() when "load more" button is clicked', () => {
-    const coursesSpy = spyOn(courseService, 'getCourses').and.returnValue(
-      of(mockCourses).pipe(
-        tap((courses) => {
-          courseService.courses = courses;
-        })
-      )
-    );
+    fixture.detectChanges();
+
+    mockStore.setState({
+      courses: {
+        courses: mockCourses,
+        editingCourse: {
+          id: 321,
+          title: 'title',
+          description: 'description',
+          duration: 123,
+          creationDate: new Date(),
+          topRated: true,
+          authors: [],
+        },
+      },
+      auth: {
+        token: 'token',
+      },
+    });
 
     fixture.detectChanges();
+
+    const expected = cold('a', {
+      a: CoursesActions.getCourses({
+        start: 0,
+        count: component.coursesCount + 5,
+      }),
+    });
 
     const loadMoreBtn = template.querySelector(
       '.load-more span'
     ) as HTMLButtonElement;
-
     loadMoreBtn.dispatchEvent(new Event('click'));
 
-    expect(coursesSpy).toHaveBeenCalled();
+    expect(mockStore.scannedActions$).toBeObservable(expected);
   });
 
   it('should show "no courses" text if there are no courses', () => {
-    spyOn(courseService, 'getCourses').and.returnValue(
-      of([]).pipe(
-        tap((courses) => {
-          courseService.courses = courses;
-        })
-      )
-    );
-
     fixture.detectChanges();
 
     expect(template.querySelector('.no-data')).toBeTruthy();
@@ -178,22 +198,13 @@ describe('CoursesComponent', () => {
     expect(location.path()).toBe('/new');
   }));
 
-  it('should call removeCourse() if deleteCourse() method is fired', fakeAsync(() => {
-    spyOn(courseService, 'getCourses').and.returnValue(
-      of(mockCourses).pipe(
-        tap((courses) => {
-          courseService.courses = courses;
-        })
-      )
-    );
-    fixture.detectChanges();
-
-    const courseSpy = spyOn(courseService, 'removeCourse').and.returnValue(
-      of()
-    );
+  it('should call removeCourse() if deleteCourse() method is fired', () => {
+    const expected = cold('a', {
+      a: CoursesActions.deleteCourse({ id: 1 }),
+    });
 
     component.deleteCourse(1);
 
-    expect(courseSpy).toHaveBeenCalled();
-  }));
+    expect(mockStore.scannedActions$).toBeObservable(expected);
+  });
 });

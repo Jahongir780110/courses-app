@@ -12,7 +12,6 @@ import { selectIsLoading } from './state/loading/loading.selectors';
 })
 export class AppComponent {
   title = 'my-app';
-  isLoading = false;
   isLoading$ = this.store.select(selectIsLoading);
 
   constructor(private store: Store<AppState>) {}

@@ -138,18 +138,4 @@ describe('CourseCardComponent', () => {
 
     expect(template.querySelector('.top-rated-icon')).not.toBeTruthy();
   });
-
-  it('should console log "OnInit" when ngOnInit hook is called', () => {
-    const spy = spyOn(window.console, 'log');
-    component.ngOnInit();
-
-    expect(spy).toHaveBeenCalledWith('OnInit');
-  });
-
-  it('should console log "AfterViewInit" when ngAfterViewInit hook is called', () => {
-    const spy = spyOn(window.console, 'log');
-    component.ngAfterViewInit();
-
-    expect(spy).toHaveBeenCalledWith('AfterViewInit');
-  });
 });
