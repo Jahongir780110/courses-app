@@ -11,9 +11,6 @@
         placeholder="Text to search"
         #searchInput
       />
-      <!-- <button class="btn btn-success ms-2" (click)="searchCourses()">
-        Search
-      </button> -->
     </div>
 
     <div class="add-course mt-3 text-end">
@@ -24,10 +21,7 @@
 
     <div class="course-cards mt-2">
       <app-course-card
-        *ngFor="
-          let course of courseService.courses | orderBy;
-          trackBy: identifyCourse
-        "
+        *ngFor="let course of courses | orderBy; trackBy: identifyCourse"
         [course]="course"
         (edit)="showEditCoursePage($event)"
         (delete)="deleteCourse($event)"
@@ -35,16 +29,13 @@
     </div>
 
     <div
-      *ngIf="courseService.courses.length"
+      *ngIf="courses.length"
       class="load-more mb-sm-5 mb-3 p-4 d-flex align-items-center justify-content-center"
     >
       <span (click)="loadMoreCourses()">LOAD MORE</span>
     </div>
 
-    <div
-      *ngIf="!courseService.courses.length"
-      class="no-data mt-4 text-center text-danger"
-    >
+    <div *ngIf="!courses.length" class="no-data mt-4 text-center text-danger">
       NO DATA. FEEL FREE TO ADD NEW COURSE
     </div>
   </div>

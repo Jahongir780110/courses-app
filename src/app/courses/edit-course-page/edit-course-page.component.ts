@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { Course } from 'src/app/models/course.model';
-import { CourseService } from 'src/app/services/course.service';
-import { LoadingService } from 'src/app/services/loading.service';
+import { AppState } from 'src/app/state/app.state';
+
+import * as CoursesActions from '../../state/courses/courses.actions';
+import { selectEditingCourse } from 'src/app/state/courses/courses.selectors';
 
 @Component({
   selector: 'app-edit-course-page',
@@ -17,22 +20,27 @@ export class EditCoursePageComponent implements OnInit {
   oldCourse: Course | null = null;
 
   constructor(
-    private courseService: CourseService,
-    private loadingService: LoadingService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private store: Store<AppState>
   ) {}
 
   ngOnInit(): void {
     const courseId = this.route.snapshot.paramMap.get('courseId') as string;
 
-    this.courseService.getCourse(+courseId).subscribe((course) => {
-      this.oldCourse = course;
+    setTimeout(() => {
+      this.store.dispatch(CoursesActions.getCourse({ id: +courseId }));
+    }, 0); // If i remove setTimeout() it is showing ExpressionChangedAfterItHasBeenCheckedError in the console
 
-      this.title = course.title;
-      this.description = course.description;
-      this.duration = course.duration;
-      this.date = course.creationDate;
+    this.store.select(selectEditingCourse).subscribe((course) => {
+      if (course) {
+        this.oldCourse = course;
+
+        this.title = course.title;
+        this.description = course.description;
+        this.duration = course.duration;
+        this.date = course.creationDate;
+      }
     });
   }
 
@@ -53,24 +61,19 @@ export class EditCoursePageComponent implements OnInit {
   }
 
   save() {
-    this.loadingService.loadingChanged.next(true);
-
     const oldCourseCopy = { ...this.oldCourse } as Course;
-    this.courseService
-      .updateCourse(
-        oldCourseCopy.id,
-        this.title,
-        this.description,
-        this.duration,
-        this.date,
-        oldCourseCopy.topRated,
-        []
-      )
-      .subscribe(() => {
-        this.router.navigate(['courses']);
 
-        this.loadingService.loadingChanged.next(false);
-      });
+    this.store.dispatch(
+      CoursesActions.updateCourse({
+        id: oldCourseCopy.id,
+        title: this.title,
+        description: this.description,
+        duration: this.duration,
+        creationDate: this.date,
+        isTopRated: oldCourseCopy.topRated,
+        authors: oldCourseCopy.authors,
+      })
+    );
   }
 
   cancel() {

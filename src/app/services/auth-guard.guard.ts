@@ -6,17 +6,22 @@ import {
   RouterStateSnapshot,
   UrlTree,
 } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
-import { AuthenticationService } from './authentication.service';
+import { AppState } from '../state/app.state';
+import { selectIsAuthenticated } from '../state/auth/auth.selectors';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuardGuard implements CanActivate {
-  constructor(
-    private authService: AuthenticationService,
-    private router: Router
-  ) {}
+  isAuthenticated = false;
+
+  constructor(private router: Router, private store: Store<AppState>) {
+    this.store
+      .select(selectIsAuthenticated)
+      .subscribe((val) => (this.isAuthenticated = val));
+  }
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -26,7 +31,7 @@ export class AuthGuardGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    if (this.authService.isAuthenticated()) {
+    if (this.isAuthenticated) {
       return of(true);
     }
 

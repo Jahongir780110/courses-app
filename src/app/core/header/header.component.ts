@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
-import { AuthenticationService } from 'src/app/services/authentication.service';
+import { Store } from '@ngrx/store';
+import { User } from 'src/app/models/user.model';
+import { AppState } from 'src/app/state/app.state';
+import { selectUser } from 'src/app/state/auth/auth.selectors';
+import * as AuthActions from '../../state/auth/auth.actions';
 
 @Component({
   selector: 'app-header',
@@ -9,26 +13,19 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
-  userFirstName = '';
-  userLastName = '';
   faUser = faUser;
   faRightFromBracket = faRightFromBracket;
+  user: User | null = null;
 
-  constructor(private authenticationService: AuthenticationService) {}
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
-    this.authenticationService.userDataChanged.subscribe((data) => {
-      if (data) {
-        this.userFirstName = data.name.first;
-        this.userLastName = data.name.last;
-      } else {
-        this.userFirstName = '';
-        this.userLastName = '';
-      }
+    this.store.select(selectUser).subscribe((user) => {
+      this.user = user;
     });
   }
 
   logout() {
-    this.authenticationService.logout();
+    this.store.dispatch(AuthActions.logout());
   }
 }

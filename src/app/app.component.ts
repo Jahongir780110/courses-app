@@ -1,20 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { LoadingService } from './services/loading.service';
+import { Component } from '@angular/core';
+
+import { Store } from '@ngrx/store';
+import { AppState } from './state/app.state';
+
+import { selectIsLoading } from './state/loading/loading.selectors';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'my-app';
   isLoading = false;
+  isLoading$ = this.store.select(selectIsLoading);
 
-  constructor(private loadingService: LoadingService) {}
-
-  ngOnInit() {
-    this.loadingService.loadingChanged.subscribe((value) => {
-      this.isLoading = value;
-    });
-  }
+  constructor(private store: Store<AppState>) {}
 }

@@ -1,17 +1,20 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import {
   debounceTime,
   distinctUntilChanged,
   filter,
   fromEvent,
   map,
-  switchMap,
+  tap,
 } from 'rxjs';
 import { Course } from 'src/app/models/course.model';
 import { CourseService } from 'src/app/services/course.service';
-import { LoadingService } from 'src/app/services/loading.service';
 import { FilterPipe } from 'src/app/shared/pipes/filter.pipe';
+import { AppState } from 'src/app/state/app.state';
+import { selectCourses } from 'src/app/state/courses/courses.selectors';
+import * as CoursesActions from '../../state/courses/courses.actions';
 
 @Component({
   selector: 'app-courses',
@@ -21,19 +24,31 @@ import { FilterPipe } from 'src/app/shared/pipes/filter.pipe';
 })
 export class CoursesComponent implements OnInit {
   coursesCount = 5;
+  courses: Course[] = [];
 
   @ViewChild('searchInput', { static: true })
   searchInput!: ElementRef<HTMLInputElement>;
 
   constructor(
     public courseService: CourseService,
-    private loadingService: LoadingService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private store: Store<AppState>
   ) {}
 
   ngOnInit() {
-    this.courseService.getCourses(0, 5).subscribe();
+    setTimeout(() => {
+      this.store.dispatch(
+        CoursesActions.getCourses({
+          start: 0,
+          count: this.coursesCount,
+        })
+      );
+    }, 0); // If i remove setTimeout() it is showing ExpressionChangedAfterItHasBeenCheckedError in the console
+
+    this.store.select(selectCourses).subscribe((courses) => {
+      this.courses = courses;
+    });
 
     fromEvent(this.searchInput.nativeElement, 'keyup')
       .pipe(
@@ -43,27 +58,32 @@ export class CoursesComponent implements OnInit {
         filter((val) => val.length > 2 || val.length === 0),
         debounceTime(1000),
         distinctUntilChanged(),
-        switchMap((v) => this.searchCourses(v))
+        tap((v) => this.searchCourses(v))
       )
       .subscribe();
   }
 
   searchCourses(searchText: string) {
     if (!searchText.length) {
-      return this.courseService.getCourses(0, this.coursesCount);
+      return this.store.dispatch(
+        CoursesActions.getCourses({ start: 0, count: this.coursesCount })
+      );
     } else {
-      return this.courseService.searchCourses(searchText);
+      return this.store.dispatch(
+        CoursesActions.searchCourses({ fragment: searchText })
+      );
     }
   }
 
   loadMoreCourses() {
-    this.loadingService.loadingChanged.next(true);
-
     this.coursesCount += 5;
 
-    this.courseService.getCourses(0, this.coursesCount).subscribe(() => {
-      this.loadingService.loadingChanged.next(false);
-    });
+    this.store.dispatch(
+      CoursesActions.getCourses({
+        start: 0,
+        count: this.coursesCount,
+      })
+    );
   }
 
   showEditCoursePage(courseId: number) {
@@ -73,12 +93,7 @@ export class CoursesComponent implements OnInit {
   }
 
   deleteCourse(courseId: number) {
-    this.loadingService.loadingChanged.next(true);
-    this.courseService.removeCourse(courseId).subscribe(() => {
-      this.courseService.getCourses(0, this.coursesCount).subscribe(() => {
-        this.loadingService.loadingChanged.next(false);
-      });
-    });
+    this.store.dispatch(CoursesActions.deleteCourse({ id: courseId }));
   }
 
   showAddCoursePage() {

@@ -1,7 +1,7 @@
 <div class="login-page">
   <div class="form-card p-3">
     <h3 class="title">Login</h3>
-    <div class="text-danger">{{ error }}</div>
+    <div class="text-danger">{{ error$ | async }}</div>
 
     <form>
       <div class="login mt-3">

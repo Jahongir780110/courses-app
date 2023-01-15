@@ -4,7 +4,9 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import { AuthenticationService } from '../../services/authentication.service';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/state/app.state';
+import { selectIsAuthenticated } from 'src/app/state/auth/auth.selectors';
 
 @Directive({
   selector: '[appIfNotAuthenticated]',
@@ -15,17 +17,13 @@ export class IfNotAuthenticatedDirective implements OnInit {
   constructor(
     private templateRef: TemplateRef<HTMLElement>,
     private viewContainer: ViewContainerRef,
-    private authenticationService: AuthenticationService
+    private store: Store<AppState>
   ) {}
 
   ngOnInit() {
-    this.render(this.authenticationService.isAuthenticated());
-
-    this.authenticationService.authenticationChanged.subscribe(
-      (isAuthenticated) => {
-        this.render(isAuthenticated);
-      }
-    );
+    this.store.select(selectIsAuthenticated).subscribe((val) => {
+      this.render(val);
+    });
   }
 
   render(isAuthenticated: boolean) {

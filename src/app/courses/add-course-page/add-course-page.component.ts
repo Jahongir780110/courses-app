@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { CourseService } from 'src/app/services/course.service';
-import { LoadingService } from 'src/app/services/loading.service';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/state/app.state';
+
+import * as CoursesActions from '../../state/courses/courses.actions';
 
 @Component({
   selector: 'app-add-course-page',
@@ -14,11 +16,7 @@ export class AddCoursePageComponent {
   duration = 0;
   date = new Date();
 
-  constructor(
-    private courseService: CourseService,
-    private loadingService: LoadingService,
-    private router: Router
-  ) {}
+  constructor(private store: Store<AppState>, private router: Router) {}
 
   changeTitle(e: Event) {
     this.title = (e.target as HTMLInputElement).value;
@@ -37,22 +35,16 @@ export class AddCoursePageComponent {
   }
 
   save() {
-    this.loadingService.loadingChanged.next(true);
-
-    this.courseService
-      .createCourse(
-        this.title,
-        this.description,
-        this.date,
-        this.duration,
-        true,
-        []
-      )
-      .subscribe(() => {
-        this.loadingService.loadingChanged.next(false);
-
-        this.router.navigate(['courses']);
-      });
+    this.store.dispatch(
+      CoursesActions.createCourse({
+        title: this.title,
+        description: this.description,
+        duration: this.duration,
+        creationDate: this.date,
+        isTopRated: true,
+        authors: [],
+      })
+    );
   }
 
   cancel() {

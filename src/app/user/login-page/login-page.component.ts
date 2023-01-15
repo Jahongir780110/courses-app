@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthenticationService } from 'src/app/services/authentication.service';
-import { LoadingService } from 'src/app/services/loading.service';
+import { Store } from '@ngrx/store';
+
+import { AppState } from 'src/app/state/app.state';
+import * as AuthActions from '../../state/auth/auth.actions';
+import { selectAuthError } from 'src/app/state/auth/auth.selectors';
 
 @Component({
   selector: 'app-login-page',
@@ -11,31 +13,15 @@ import { LoadingService } from 'src/app/services/loading.service';
 export class LoginPageComponent {
   login = 'flastname';
   password = 'flastname';
-  error: null | string = null;
+  error$ = this.store.select(selectAuthError);
 
-  constructor(
-    private authenticationService: AuthenticationService,
-    private loadingService: LoadingService,
-    private router: Router
-  ) {}
+  constructor(private store: Store<AppState>) {}
 
-  loginHandler(e: Event) {
+  async loginHandler(e: Event) {
     e.preventDefault();
-    this.loadingService.loadingChanged.next(true);
 
-    this.authenticationService.login(this.login, this.password).subscribe({
-      next: () => {
-        this.router.navigate(['/courses']);
-
-        this.loadingService.loadingChanged.next(false);
-      },
-      error: (errorObject) => {
-        this.error =
-          typeof errorObject.error === 'string'
-            ? errorObject.error
-            : 'Oops! Something went wrong!';
-        this.loadingService.loadingChanged.next(false);
-      },
-    });
+    this.store.dispatch(
+      AuthActions.login({ login: this.login, password: this.password })
+    );
   }
 }

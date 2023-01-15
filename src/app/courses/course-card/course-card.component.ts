@@ -1,13 +1,7 @@
 import {
-  AfterContentInit,
-  AfterViewInit,
   Component,
-  DoCheck,
   EventEmitter,
   Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
   Output,
   ChangeDetectionStrategy,
 } from '@angular/core';
@@ -24,15 +18,7 @@ import { Course } from 'src/app/models/course.model';
   styleUrls: ['./course-card.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CourseCardComponent
-  implements
-    OnChanges,
-    OnInit,
-    DoCheck,
-    AfterContentInit,
-    AfterViewInit,
-    OnDestroy
-{
+export class CourseCardComponent {
   @Input() course!: Course;
   @Output() edit = new EventEmitter<number>();
   @Output() delete = new EventEmitter<number>();
@@ -44,26 +30,6 @@ export class CourseCardComponent
   faStar = faStar;
 
   showModal = false;
-
-  ngOnInit() {
-    console.log('OnInit');
-  }
-  ngOnChanges() {
-    console.log('OnChanges');
-  }
-  ngDoCheck() {
-    console.log('DoCheck');
-  }
-  ngAfterContentInit() {
-    console.log('AfterContentInit');
-  }
-  ngAfterViewInit() {
-    console.log('AfterViewInit');
-  }
-
-  ngOnDestroy() {
-    console.log('OnDestroy');
-  }
 
   editCourse() {
     this.edit.emit(this.course.id);

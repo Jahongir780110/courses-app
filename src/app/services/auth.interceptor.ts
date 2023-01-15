@@ -6,21 +6,24 @@ import {
   HttpInterceptor,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthenticationService } from './authentication.service';
+import { AppState } from '../state/app.state';
+import { Store } from '@ngrx/store';
+import { selectToken } from '../state/auth/auth.selectors';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthenticationService) {}
+  token = '';
+
+  constructor(private store: Store<AppState>) {
+    this.store.select(selectToken).subscribe((val) => (this.token = val));
+  }
 
   intercept(
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     const reqClone = request.clone({
-      headers: request.headers.append(
-        'Authorization',
-        `Bearer ${this.authService.token}`
-      ),
+      headers: request.headers.append('Authorization', `Bearer ${this.token}`),
     });
 
     return next.handle(reqClone);
