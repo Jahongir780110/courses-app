@@ -1,0 +1,28 @@
+<div class="authors mt-3">
+  <div class="form-label w-100 d-flex justify-content-between">
+    <label for="authors" class="label-text">Authors:</label>
+    <span class="required text-secondary">*required</span>
+  </div>
+
+  <input
+    type="text"
+    id="authors"
+    placeholder="Text input"
+    class="form-control"
+    list="authorsList"
+    name="authors"
+    #authors="ngModel"
+    [(ngModel)]="authorsValue"
+    (keyup.enter)="addAuthor($event)"
+  />
+  <datalist id="authorsList">
+    <option *ngFor="let author of allAuthors" [value]="author.name"></option>
+  </datalist>
+
+  <div class="selected-authors mt-3">
+    <span *ngFor="let author of selectedAuthors" class="selected-author me-2">
+      <span class="author-name">{{ author.name }}</span>
+      <span class="author-remove" (click)="removeAuthor(author.id)">✕</span>
+    </span>
+  </div>
+</div>

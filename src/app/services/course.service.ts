@@ -73,4 +73,8 @@ export class CourseService {
       `${this.authService.backendUrl}/courses?textFragment=${fragment}`
     );
   }
+
+  getAuthors() {
+    return this.http.get<Author[]>(`${this.authService.backendUrl}/authors`);
+  }
 }

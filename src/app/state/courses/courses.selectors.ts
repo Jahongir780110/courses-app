@@ -13,3 +13,8 @@ export const selectEditingCourse = createSelector(
   selectCoursesAll,
   (state: CoursesState) => state.editingCourse
 );
+
+export const selectAuthors = createSelector(
+  selectCoursesAll,
+  (state: CoursesState) => state.authors
+);

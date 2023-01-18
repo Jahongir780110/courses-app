@@ -5,12 +5,14 @@
 <div class="courses">
   <div class="container">
     <div class="search d-flex mt-3">
-      <input
-        type="text"
-        class="form-control"
-        placeholder="Text to search"
-        #searchInput
-      />
+      <form #f="ngForm">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Text to search"
+          #searchInput
+        />
+      </form>
     </div>
 
     <div class="add-course mt-3 text-end">

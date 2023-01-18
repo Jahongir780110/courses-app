@@ -1,0 +1,19 @@
+.label-text {
+  font-weight: 500;
+}
+
+.selected-author {
+  padding: 4px 8px;
+  padding-right: 28px;
+  background-color: #6c757d;
+  color: #fff;
+  position: relative;
+}
+
+.author-remove {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+}

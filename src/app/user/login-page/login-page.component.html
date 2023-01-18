@@ -1,53 +1,55 @@
 <div class="login-page">
   <div class="form-card p-3">
     <h3 class="title">Login</h3>
-    <div class="text-danger">{{ error$ | async }}</div>
+    <div class="text-danger">{{ loginError$ | async }}</div>
 
-    <form>
+    <form #f="ngForm" (ngSubmit)="loginHandler(f)">
       <div class="login mt-3">
-        <label
-          for="login"
-          class="form-label w-100 d-flex justify-content-between"
-        >
-          <span class="label-text">Login:</span>
+        <div class="form-label w-100 d-flex justify-content-between">
+          <label for="login" class="label-text">Login:</label>
           <span class="required text-secondary">*required</span>
-        </label>
+        </div>
         <input
           type="text"
-          class="form-control"
           id="login"
           placeholder="Enter login"
+          class="form-control"
           name="login"
-          [(ngModel)]="login"
+          #login="ngModel"
+          [(ngModel)]="form.login"
+          required
+          minlength="3"
         />
+        <span *ngIf="login.invalid && login.touched" class="text-danger">
+          Please enter at least 3 characters
+        </span>
       </div>
 
       <div class="password mt-3">
-        <label
-          for="pwd"
-          class="form-label w-100 d-flex justify-content-between"
-        >
-          <span class="label-text">Email:</span>
+        <div class="form-label w-100 d-flex justify-content-between">
+          <label for="pwd" class="label-text">Email:</label>
           <span class="required text-secondary">*required</span>
-        </label>
+        </div>
         <input
           type="password"
-          class="form-control"
           id="pwd"
           placeholder="Enter password"
-          name="pswd"
-          [(ngModel)]="password"
+          class="form-control"
+          name="password"
+          #password="ngModel"
+          [(ngModel)]="form.password"
+          required
+          minlength="3"
         />
+        <span *ngIf="password.invalid && password.touched" class="text-danger">
+          Please enter at least 3 characters
+        </span>
       </div>
 
       <div class="bottom mt-4 d-flex justify-content-between">
         <a routerLink="/forgot_password">Forgot password?</a>
 
-        <button
-          type="submit"
-          class="btn btn-primary"
-          (click)="loginHandler($event)"
-        >
+        <button type="submit" class="btn btn-primary" [disabled]="f.invalid">
           Login
         </button>
       </div>

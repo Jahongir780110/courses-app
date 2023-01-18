@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 
 interface breadCrumbRoute {
-  name?: string;
-  absolutePath?: string;
+  name: string;
+  absolutePath: string;
 }
 
 @Component({

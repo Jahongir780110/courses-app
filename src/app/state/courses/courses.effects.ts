@@ -8,6 +8,7 @@ import * as CoursesActions from './courses.actions';
 import * as LoadingActions from '../loading/loading.actions';
 import { Course } from 'src/app/models/course.model';
 import { Router } from '@angular/router';
+import { Author } from 'src/app/models/author.model';
 
 @Injectable()
 export class CoursesEffects {
@@ -178,4 +179,21 @@ export class CoursesEffects {
     },
     { dispatch: false }
   );
+
+  $getAuthors = createEffect(() => {
+    return this.actions.pipe(
+      ofType(CoursesActions.getAuthors),
+      mergeMap(() => {
+        this.store.dispatch(LoadingActions.setLoading({ value: true }));
+
+        return from(this.coursesService.getAuthors()).pipe(
+          map((data: Author[]) => {
+            this.store.dispatch(LoadingActions.setLoading({ value: false }));
+
+            return CoursesActions.getAuthorsSuccess({ authors: data });
+          })
+        );
+      })
+    );
+  });
 }

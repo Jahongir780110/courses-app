@@ -1,7 +1,11 @@
-import { Component } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { Author } from 'src/app/models/author.model';
 import { AppState } from 'src/app/state/app.state';
+import { selectAuthors } from 'src/app/state/courses/courses.selectors';
 
 import * as CoursesActions from '../../state/courses/courses.actions';
 
@@ -10,44 +14,48 @@ import * as CoursesActions from '../../state/courses/courses.actions';
   templateUrl: './add-course-page.component.html',
   styleUrls: ['./add-course-page.component.css'],
 })
-export class AddCoursePageComponent {
-  title = '';
-  description = '';
-  duration = 0;
-  date = new Date();
+export class AddCoursePageComponent implements OnInit {
+  form = {
+    title: '',
+    description: '',
+    date: new DatePipe('en').transform(new Date(), 'yyyy-MM-dd') as string,
+    duration: 0,
+  };
+  allAuthors: Author[] = [];
+  selectedAuthors: Author[] = [];
 
   constructor(private store: Store<AppState>, private router: Router) {}
 
-  changeTitle(e: Event) {
-    this.title = (e.target as HTMLInputElement).value;
+  ngOnInit() {
+    setTimeout(() => {
+      this.store.dispatch(CoursesActions.getAuthors());
+    }, 0); // If i remove setTimeout() it is showing ExpressionChangedAfterItHasBeenCheckedError in the console
+
+    this.store.select(selectAuthors).subscribe((authors) => {
+      this.allAuthors = authors;
+    });
   }
 
-  changeDescription(e: Event) {
-    this.description = (e.target as HTMLTextAreaElement).value;
-  }
+  save(form: NgForm) {
+    if (form.invalid || !this.selectedAuthors.length) return;
 
-  changeDuration(e: number) {
-    this.duration = e;
-  }
-
-  changeDate(e: Date) {
-    this.date = e;
-  }
-
-  save() {
     this.store.dispatch(
       CoursesActions.createCourse({
-        title: this.title,
-        description: this.description,
-        duration: this.duration,
-        creationDate: this.date,
+        title: this.form.title,
+        description: this.form.description,
+        creationDate: new Date(this.form.date),
+        duration: this.form.duration,
         isTopRated: true,
-        authors: [],
+        authors: this.selectedAuthors,
       })
     );
   }
 
   cancel() {
     this.router.navigate(['courses']);
+  }
+
+  setSelectedAuthors(authors: Author[]) {
+    this.selectedAuthors = authors;
   }
 }

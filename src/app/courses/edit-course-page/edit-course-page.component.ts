@@ -5,7 +5,13 @@ import { Course } from 'src/app/models/course.model';
 import { AppState } from 'src/app/state/app.state';
 
 import * as CoursesActions from '../../state/courses/courses.actions';
-import { selectEditingCourse } from 'src/app/state/courses/courses.selectors';
+import {
+  selectAuthors,
+  selectEditingCourse,
+} from 'src/app/state/courses/courses.selectors';
+import { NgForm } from '@angular/forms';
+import { DatePipe } from '@angular/common';
+import { Author } from 'src/app/models/author.model';
 
 @Component({
   selector: 'app-edit-course-page',
@@ -13,11 +19,15 @@ import { selectEditingCourse } from 'src/app/state/courses/courses.selectors';
   styleUrls: ['./edit-course-page.component.css'],
 })
 export class EditCoursePageComponent implements OnInit {
-  title = '';
-  description = '';
-  duration = 0;
-  date!: Date;
-  oldCourse: Course | null = null;
+  form = {
+    title: '',
+    description: '',
+    date: new DatePipe('en').transform(new Date(), 'yyyy-MM-dd') as string,
+    duration: 0,
+  };
+  oldCourse!: Course;
+  allAuthors: Author[] = [];
+  selectedAuthors: Author[] = [];
 
   constructor(
     private router: Router,
@@ -30,53 +40,52 @@ export class EditCoursePageComponent implements OnInit {
 
     setTimeout(() => {
       this.store.dispatch(CoursesActions.getCourse({ id: +courseId }));
+      this.store.dispatch(CoursesActions.getAuthors());
     }, 0); // If i remove setTimeout() it is showing ExpressionChangedAfterItHasBeenCheckedError in the console
 
     this.store.select(selectEditingCourse).subscribe((course) => {
       if (course) {
         this.oldCourse = course;
 
-        this.title = course.title;
-        this.description = course.description;
-        this.duration = course.duration;
-        this.date = course.creationDate;
+        this.form.title = course.title;
+        this.form.description = course.description;
+        this.form.duration = course.duration;
+        this.form.date = new DatePipe('en').transform(
+          course.creationDate,
+          'yyyy-MM-dd'
+        ) as string;
+        this.selectedAuthors = course.authors;
       }
+    });
+
+    this.store.select(selectAuthors).subscribe((authors) => {
+      this.allAuthors = authors;
     });
   }
 
-  changeTitle(e: Event) {
-    this.title = (e.target as HTMLInputElement).value;
-  }
-
-  changeDescription(e: Event) {
-    this.description = (e.target as HTMLTextAreaElement).value;
-  }
-
-  changeDuration(e: number) {
-    this.duration = e;
-  }
-
-  changeDate(e: Date) {
-    this.date = e;
-  }
-
-  save() {
-    const oldCourseCopy = { ...this.oldCourse } as Course;
+  save(f: NgForm) {
+    if (f.invalid || !this.selectedAuthors.length) {
+      return;
+    }
 
     this.store.dispatch(
       CoursesActions.updateCourse({
-        id: oldCourseCopy.id,
-        title: this.title,
-        description: this.description,
-        duration: this.duration,
-        creationDate: this.date,
-        isTopRated: oldCourseCopy.topRated,
-        authors: oldCourseCopy.authors,
+        id: this.oldCourse.id,
+        title: this.form.title,
+        description: this.form.description,
+        duration: this.form.duration,
+        creationDate: new Date(this.form.date),
+        isTopRated: this.oldCourse.topRated,
+        authors: this.selectedAuthors,
       })
     );
   }
 
   cancel() {
     this.router.navigate(['courses']);
+  }
+
+  setSelectedAuthors(authors: Author[]) {
+    this.selectedAuthors = authors;
   }
 }

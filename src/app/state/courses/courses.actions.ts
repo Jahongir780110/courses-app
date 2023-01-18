@@ -56,3 +56,10 @@ export const createCourse = createAction(
     authors: Author[];
   }>()
 );
+
+export const getAuthors = createAction('[Courses] Get Authors');
+
+export const getAuthorsSuccess = createAction(
+  '[Courses] Get Authors Success',
+  props<{ authors: Author[] }>()
+);

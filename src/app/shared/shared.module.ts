@@ -12,9 +12,8 @@ import { FilterPipe } from './pipes/filter.pipe';
 import { IfAuthenticatedDirective } from './directives/if-authenticated.directive';
 import { IfNotAuthenticatedDirective } from './directives/if-not-authenticated.directive';
 import { OrderByPipe } from './pipes/order-by.pipe';
-import { CourseDurationInputComponent } from './course-duration-input/course-duration-input.component';
-import { CourseDateInputComponent } from './course-date-input/course-date-input.component';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
+import { AuthorsInputComponent } from './authors-input/authors-input.component';
 
 @NgModule({
   declarations: [
@@ -25,10 +24,9 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
     IfAuthenticatedDirective,
     IfNotAuthenticatedDirective,
     OrderByPipe,
-    CourseDurationInputComponent,
-    CourseDateInputComponent,
     LogoComponent,
     BreadcrumbComponent,
+    AuthorsInputComponent,
   ],
   imports: [CommonModule, FormsModule, FontAwesomeModule, RouterModule],
   exports: [
@@ -41,11 +39,10 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
     OrderByPipe,
     FormsModule,
     FontAwesomeModule,
-    CourseDurationInputComponent,
-    CourseDateInputComponent,
     LogoComponent,
     BreadcrumbComponent,
     RouterModule,
+    AuthorsInputComponent,
   ],
 })
 export class SharedModule {}
