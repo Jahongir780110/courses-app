@@ -4,7 +4,7 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SharedModule } from 'src/app/shared/shared.module';
 
@@ -57,19 +57,19 @@ describe('AddCoursePageComponent', () => {
   });
 
   it('should dispatch createCourse action when "save" button is clicked', fakeAsync(() => {
-    const saveBtn = template.querySelectorAll('.bottom button')[1];
-    saveBtn.dispatchEvent(new Event('click'));
+    const form = template.querySelector('form') as HTMLFormElement;
+    form.dispatchEvent(new Event('submit'));
 
     tick();
 
     const expected = cold('a', {
       a: CoursesActions.createCourse({
-        title: '',
-        description: '',
-        duration: 0,
-        creationDate: component.date,
+        title: component.form.title,
+        description: component.form.description,
+        creationDate: new Date(component.form.date),
+        duration: component.form.duration,
         isTopRated: true,
-        authors: [],
+        authors: component.form.authors,
       }),
     });
     expect(mockStore.scannedActions$).toBeObservable(expected);

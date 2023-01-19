@@ -39,7 +39,12 @@ describe('CourseCardComponent', () => {
   });
 
   it('should have "green" border color if the course is recent', () => {
-    component.course = { ...mockCourse, creationDate: new Date(2023, 0, 5) };
+    const oneDayInMilliSeconds = 1000 * 60 * 60 * 24;
+
+    component.course = {
+      ...mockCourse,
+      creationDate: new Date(new Date().getTime() - oneDayInMilliSeconds),
+    };
 
     fixture.detectChanges();
 

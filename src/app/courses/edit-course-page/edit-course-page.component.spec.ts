@@ -36,7 +36,12 @@ describe('EditCoursePageComponent', () => {
         duration: 123,
         creationDate: new Date(),
         topRated: true,
-        authors: [],
+        authors: [
+          {
+            id: 'id',
+            name: 'name',
+          },
+        ],
       },
     },
     auth: {
@@ -85,18 +90,18 @@ describe('EditCoursePageComponent', () => {
   });
 
   it('should dispatch updateCourse action when "save" button is clicked', fakeAsync(() => {
-    const saveBtn = template.querySelectorAll('.bottom button')[1];
-    saveBtn.dispatchEvent(new Event('click'));
+    const form = template.querySelector('form') as HTMLFormElement;
+    form.dispatchEvent(new Event('submit'));
 
     tick();
 
     const expected = cold('a', {
       a: CoursesActions.updateCourse({
         id: (component.oldCourse as Course).id,
-        title: component.title,
-        description: component.description,
-        duration: component.duration,
-        creationDate: component.date,
+        title: component.form.title,
+        description: component.form.description,
+        duration: component.form.duration,
+        creationDate: new Date(component.form.date),
         isTopRated: (component.oldCourse as Course).topRated,
         authors: (component.oldCourse as Course).authors,
       }),

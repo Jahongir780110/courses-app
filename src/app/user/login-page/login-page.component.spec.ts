@@ -4,7 +4,6 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
 
 import { LoginPageComponent } from './login-page.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -14,6 +13,7 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { cold } from 'jasmine-marbles';
 
 import * as AuthActions from '../../state/auth/auth.actions';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 describe('LoginPageComponent', () => {
   let component: LoginPageComponent;
@@ -32,9 +32,9 @@ describe('LoginPageComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [LoginPageComponent],
       imports: [
-        FormsModule,
         RouterTestingModule.withRoutes(routes),
         HttpClientTestingModule,
+        SharedModule,
       ],
       providers: [provideMockStore({ initialState })],
     }).compileComponents();
@@ -51,15 +51,15 @@ describe('LoginPageComponent', () => {
   });
 
   it('should call login action once login button is clicked', fakeAsync(() => {
-    const loginBtn = template.querySelector('.bottom button');
-    loginBtn?.dispatchEvent(new Event('click'));
+    const form = template.querySelector('form') as HTMLFormElement;
+    form.dispatchEvent(new Event('submit'));
 
     tick();
 
     const expected = cold('a', {
       a: AuthActions.login({
-        login: component.login,
-        password: component.password,
+        login: component.form.login,
+        password: component.form.password,
       }),
     });
     expect(mockStore.scannedActions$).toBeObservable(expected);

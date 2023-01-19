@@ -13,21 +13,29 @@ import { NgForm } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Author } from 'src/app/models/author.model';
 
+interface formModel {
+  title: string;
+  description: string;
+  date: string;
+  duration: number;
+  authors: Author[];
+}
+
 @Component({
   selector: 'app-edit-course-page',
   templateUrl: './edit-course-page.component.html',
   styleUrls: ['./edit-course-page.component.css'],
 })
 export class EditCoursePageComponent implements OnInit {
-  form = {
+  form: formModel = {
     title: '',
     description: '',
     date: new DatePipe('en').transform(new Date(), 'yyyy-MM-dd') as string,
     duration: 0,
+    authors: [],
   };
   oldCourse!: Course;
   allAuthors: Author[] = [];
-  selectedAuthors: Author[] = [];
 
   constructor(
     private router: Router,
@@ -54,7 +62,7 @@ export class EditCoursePageComponent implements OnInit {
           course.creationDate,
           'yyyy-MM-dd'
         ) as string;
-        this.selectedAuthors = course.authors;
+        this.form.authors = [...course.authors];
       }
     });
 
@@ -64,7 +72,7 @@ export class EditCoursePageComponent implements OnInit {
   }
 
   save(f: NgForm) {
-    if (f.invalid || !this.selectedAuthors.length) {
+    if (f.invalid) {
       return;
     }
 
@@ -76,16 +84,12 @@ export class EditCoursePageComponent implements OnInit {
         duration: this.form.duration,
         creationDate: new Date(this.form.date),
         isTopRated: this.oldCourse.topRated,
-        authors: this.selectedAuthors,
+        authors: this.form.authors,
       })
     );
   }
 
   cancel() {
     this.router.navigate(['courses']);
-  }
-
-  setSelectedAuthors(authors: Author[]) {
-    this.selectedAuthors = authors;
   }
 }

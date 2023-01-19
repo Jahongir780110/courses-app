@@ -9,20 +9,28 @@ import { selectAuthors } from 'src/app/state/courses/courses.selectors';
 
 import * as CoursesActions from '../../state/courses/courses.actions';
 
+interface formModel {
+  title: string;
+  description: string;
+  date: string;
+  duration: number;
+  authors: Author[];
+}
+
 @Component({
   selector: 'app-add-course-page',
   templateUrl: './add-course-page.component.html',
   styleUrls: ['./add-course-page.component.css'],
 })
 export class AddCoursePageComponent implements OnInit {
-  form = {
+  form: formModel = {
     title: '',
     description: '',
     date: new DatePipe('en').transform(new Date(), 'yyyy-MM-dd') as string,
     duration: 0,
+    authors: [],
   };
   allAuthors: Author[] = [];
-  selectedAuthors: Author[] = [];
 
   constructor(private store: Store<AppState>, private router: Router) {}
 
@@ -37,7 +45,7 @@ export class AddCoursePageComponent implements OnInit {
   }
 
   save(form: NgForm) {
-    if (form.invalid || !this.selectedAuthors.length) return;
+    if (form.invalid) return;
 
     this.store.dispatch(
       CoursesActions.createCourse({
@@ -46,16 +54,12 @@ export class AddCoursePageComponent implements OnInit {
         creationDate: new Date(this.form.date),
         duration: this.form.duration,
         isTopRated: true,
-        authors: this.selectedAuthors,
+        authors: this.form.authors,
       })
     );
   }
 
   cancel() {
     this.router.navigate(['courses']);
-  }
-
-  setSelectedAuthors(authors: Author[]) {
-    this.selectedAuthors = authors;
   }
 }

@@ -14,6 +14,7 @@ import { IfNotAuthenticatedDirective } from './directives/if-not-authenticated.d
 import { OrderByPipe } from './pipes/order-by.pipe';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { AuthorsInputComponent } from './authors-input/authors-input.component';
+import { CheckAuthorsIsNotEmptyDirective } from './directives/check-authors-is-not-empty.directive';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { AuthorsInputComponent } from './authors-input/authors-input.component';
     LogoComponent,
     BreadcrumbComponent,
     AuthorsInputComponent,
+    CheckAuthorsIsNotEmptyDirective,
   ],
   imports: [CommonModule, FormsModule, FontAwesomeModule, RouterModule],
   exports: [
@@ -43,6 +45,7 @@ import { AuthorsInputComponent } from './authors-input/authors-input.component';
     BreadcrumbComponent,
     RouterModule,
     AuthorsInputComponent,
+    CheckAuthorsIsNotEmptyDirective,
   ],
 })
 export class SharedModule {}

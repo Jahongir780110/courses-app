@@ -123,8 +123,10 @@
       </div>
 
       <app-authors-input
+        name="authors"
         [allAuthors]="allAuthors"
-        (setSelectedAuthors)="setSelectedAuthors($event)"
+        [(ngModel)]="form.authors"
+        appCheckAuthorsIsNotEmpty
       ></app-authors-input>
 
       <div class="bottom mt-4 d-flex justify-content-end">
@@ -135,7 +137,7 @@
         <button
           type="submit"
           class="btn btn-success ms-3"
-          [disabled]="f.invalid || !selectedAuthors.length"
+          [disabled]="f.invalid"
         >
           Save
         </button>

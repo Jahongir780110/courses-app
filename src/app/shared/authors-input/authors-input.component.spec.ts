@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { SharedModule } from '../shared.module';
 
 import { AuthorsInputComponent } from './authors-input.component';
 
@@ -8,9 +9,9 @@ describe('AuthorsInputComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AuthorsInputComponent ]
-    })
-    .compileComponents();
+      imports: [SharedModule],
+      declarations: [AuthorsInputComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AuthorsInputComponent);
     component = fixture.componentInstance;

@@ -1,20 +1,30 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Author } from '../../models/author.model';
 
 @Component({
   selector: 'app-authors-input',
   templateUrl: './authors-input.component.html',
   styleUrls: ['./authors-input.component.css'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => AuthorsInputComponent),
+      multi: true,
+    },
+  ],
 })
-export class AuthorsInputComponent {
+export class AuthorsInputComponent implements ControlValueAccessor {
   @Input() allAuthors!: Author[];
   @Input() set oldAuthors(value: Author[]) {
     this.selectedAuthors = [...value];
   }
-  @Output() setSelectedAuthors = new EventEmitter<Author[]>();
 
   authorsValue = '';
   selectedAuthors: Author[] = [];
+
+  onChange: any;
+  onTouch: any;
 
   addAuthor(event: Event) {
     event.preventDefault();
@@ -27,7 +37,8 @@ export class AuthorsInputComponent {
       this.selectedAuthors.push(selectedAuthor);
       this.authorsValue = '';
 
-      this.setSelectedAuthors.emit(this.selectedAuthors);
+      this.onChange(this.selectedAuthors);
+      this.onTouch(this.selectedAuthors);
     }
   }
 
@@ -37,6 +48,22 @@ export class AuthorsInputComponent {
     );
     this.selectedAuthors.splice(authorIndex, 1);
 
-    this.setSelectedAuthors.emit(this.selectedAuthors);
+    this.onChange(this.selectedAuthors);
+    this.onTouch(this.selectedAuthors);
+  }
+
+  // this method sets the value programmatically
+  writeValue(value: any) {
+    this.selectedAuthors = value;
+  }
+
+  // upon UI element value changes, this method gets triggered
+  registerOnChange(fn: any) {
+    this.onChange = fn;
+  }
+
+  // upon touching the element, this method gets triggered
+  registerOnTouched(fn: any) {
+    this.onTouch = fn;
   }
 }

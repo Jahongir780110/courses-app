@@ -20,7 +20,7 @@ export class LoginPageComponent {
 
   constructor(private store: Store<AppState>) {}
 
-  async loginHandler(form: NgForm) {
+  loginHandler(form: NgForm) {
     if (form.invalid) {
       return;
     }
