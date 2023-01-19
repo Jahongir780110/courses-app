@@ -1,13 +1,17 @@
 <div class="authors mt-3">
   <div class="form-label w-100 d-flex justify-content-between">
-    <label for="authors" class="label-text">Authors:</label>
-    <span class="required text-secondary">*required</span>
+    <label for="authors" class="label-text"
+      >{{ "form.authors" | translate }}:</label
+    >
+    <span class="required text-secondary"
+      >*{{ "form.required" | translate }}</span
+    >
   </div>
 
   <input
     type="text"
     id="authors"
-    placeholder="Text input"
+    [placeholder]="'form.enterAuthors' | translate"
     class="form-control"
     list="authorsList"
     name="authors"

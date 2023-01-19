@@ -18,6 +18,7 @@ import { routes } from './app.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { TranslateTestingModule } from 'ngx-translate-testing';
 
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
@@ -43,6 +44,10 @@ describe('AppComponent', () => {
         CoursesModule,
         RouterTestingModule.withRoutes(routes),
         HttpClientTestingModule,
+        TranslateTestingModule.withTranslations({
+          en: require('src/assets/i18n/en-US.json'),
+          uz: require('src/assets/i18n/uz-UZ.json'),
+        }),
       ],
       declarations: [AppComponent],
       providers: [provideMockStore({ initialState })],

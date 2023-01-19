@@ -1,6 +1,10 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpClientModule,
+  HTTP_INTERCEPTORS,
+} from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 import { CoreModule } from './core/core.module';
@@ -19,6 +23,8 @@ import { authReducer } from './state/auth/auth.reducers';
 import { coursesReducer } from './state/courses/courses.reducers';
 import { AuthEffects } from './state/auth/auth.effects';
 import { CoursesEffects } from './state/courses/courses.effects';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 export const routes: Routes = [
   {
@@ -36,6 +42,10 @@ export const routes: Routes = [
     component: NotFoundComponent,
   },
 ];
+
+export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
+  return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
+}
 
 @NgModule({
   declarations: [AppComponent],
@@ -56,6 +66,14 @@ export const routes: Routes = [
       maxAge: 25,
       logOnly: false,
       autoPause: true,
+    }),
+    TranslateModule.forRoot({
+      defaultLanguage: 'en-US',
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient],
+      },
     }),
   ],
   providers: [

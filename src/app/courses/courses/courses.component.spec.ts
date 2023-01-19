@@ -17,6 +17,7 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { cold } from 'jasmine-marbles';
 
 import * as CoursesActions from '../../state/courses/courses.actions';
+import { TranslateTestingModule } from 'ngx-translate-testing';
 
 describe('CoursesComponent', () => {
   let component: CoursesComponent;
@@ -50,6 +51,10 @@ describe('CoursesComponent', () => {
         SharedModule,
         RouterTestingModule.withRoutes(routes),
         HttpClientTestingModule,
+        TranslateTestingModule.withTranslations({
+          en: require('src/assets/i18n/en-US.json'),
+          uz: require('src/assets/i18n/uz-UZ.json'),
+        }),
       ],
       declarations: [CoursesComponent, CourseCardComponent],
       providers: [provideMockStore({ initialState })],

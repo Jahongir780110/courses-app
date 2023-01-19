@@ -1,0 +1,46 @@
+{
+  "login": "Login",
+  "logoff": "Log off",
+  "form": {
+    "login": "Login",
+    "password": "Password",
+    "title": "Title",
+    "description": "Description",
+    "date": "Date",
+    "duration": "Duration",
+    "authors": "Authors",
+    "required": "required",
+    "forgotPassword": "Forgot password?",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "enterLogin": "Enter login",
+    "enterPasssword": "Enter password",
+    "enterTitle": "Enter title",
+    "enterDescription": "Enter description",
+    "enterDuration": "Enter duration",
+    "enterAuthors": "Enter authors",
+    "mins": "minutes",
+    "lessCharactersError": "Please enter at least {{count}} characters",
+    "pleaseEnterValidValue": "Please enter valid value"
+  },
+  "footer": {
+    "videoCourses": "Videocourses",
+    "allRightsReserved": "All rights reserved"
+  },
+  "notFoundPage": {
+    "notFound": "Page Not Found"
+  },
+  "coursesPage": {
+    "courses": "Courses",
+    "textToSearch": "Text to search",
+    "addCourse": "Add course",
+    "editCourse": "Edit course",
+    "edit": "Edit",
+    "delete": "Delete",
+    "loadMore": "LOAD MORE",
+    "newCourse": "New course",
+    "noData": "NO DATA. FEEL FREE TO ADD NEW COURSE",
+    "deleteCoursePrompt": "Do you really want to delete the course?"
+  }
+}

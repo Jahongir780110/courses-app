@@ -14,6 +14,7 @@ import { cold } from 'jasmine-marbles';
 
 import * as AuthActions from '../../state/auth/auth.actions';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { TranslateTestingModule } from 'ngx-translate-testing';
 
 describe('LoginPageComponent', () => {
   let component: LoginPageComponent;
@@ -35,6 +36,10 @@ describe('LoginPageComponent', () => {
         RouterTestingModule.withRoutes(routes),
         HttpClientTestingModule,
         SharedModule,
+        TranslateTestingModule.withTranslations({
+          en: require('src/assets/i18n/en-US.json'),
+          uz: require('src/assets/i18n/uz-UZ.json'),
+        }),
       ],
       providers: [provideMockStore({ initialState })],
     }).compileComponents();

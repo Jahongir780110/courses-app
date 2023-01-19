@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateTestingModule } from 'ngx-translate-testing';
 
 import { PromptModalComponent } from './prompt-modal.component';
 
@@ -10,6 +11,12 @@ describe('PromptModalComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PromptModalComponent],
+      imports: [
+        TranslateTestingModule.withTranslations({
+          en: require('src/assets/i18n/en-US.json'),
+          uz: require('src/assets/i18n/uz-UZ.json'),
+        }),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PromptModalComponent);

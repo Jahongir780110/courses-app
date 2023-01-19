@@ -15,6 +15,7 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { cold } from 'jasmine-marbles';
 
 import * as AuthActions from '../../state/auth/auth.actions';
+import { TranslateTestingModule } from 'ngx-translate-testing';
 
 describe('HeaderComponent', () => {
   let fixture: ComponentFixture<HeaderComponent>;
@@ -35,6 +36,10 @@ describe('HeaderComponent', () => {
         SharedModule,
         RouterTestingModule.withRoutes(routes),
         HttpClientTestingModule,
+        TranslateTestingModule.withTranslations({
+          en: require('src/assets/i18n/en-US.json'),
+          uz: require('src/assets/i18n/uz-UZ.json'),
+        }),
       ],
       declarations: [HeaderComponent],
       providers: [provideMockStore({ initialState })],
@@ -111,9 +116,7 @@ describe('HeaderComponent', () => {
 
     fixture.detectChanges();
 
-    const logOffBtn = template
-      .querySelectorAll('.navbar-nav .nav-item')[1]
-      .querySelector('span') as HTMLButtonElement;
+    const logOffBtn = template.querySelector('.logout') as HTMLButtonElement;
 
     logOffBtn.dispatchEvent(new Event('click'));
     tick();

@@ -41,12 +41,14 @@
     <div class="controls col-lg-3 col-12 mt-lg-0 mt-3 text-end">
       <button class="btn btn-primary" (click)="editCourse()">
         <fa-icon [icon]="faPen"></fa-icon>
-        <span class="btn-text ms-2">Edit</span>
+        <span class="btn-text ms-2">{{ "coursesPage.edit" | translate }}</span>
       </button>
 
       <button class="btn btn-primary ms-3" (click)="showModal = true">
         <fa-icon [icon]="faTrash"></fa-icon>
-        <span class="btn-text ms-2">Delete</span>
+        <span class="btn-text ms-2">{{
+          "coursesPage.delete" | translate
+        }}</span>
       </button>
     </div>
   </div>
@@ -54,7 +56,7 @@
 
 <app-prompt-modal
   *ngIf="showModal"
-  promptText="Do you really want to delete the course?"
+  [promptText]="'coursesPage.deleteCoursePrompt' | translate"
   (cancel)="showModal = false"
   (proceed)="showModal = false; deleteCourse()"
 ></app-prompt-modal>

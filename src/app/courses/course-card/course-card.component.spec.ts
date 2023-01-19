@@ -1,6 +1,7 @@
 import { DatePipe, UpperCasePipe } from '@angular/common';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateTestingModule } from 'ngx-translate-testing';
 import { Course } from 'src/app/models/course.model';
 import { DurationPipe } from 'src/app/shared/pipes/duration.pipe';
 import { SharedModule } from 'src/app/shared/shared.module';
@@ -15,7 +16,13 @@ describe('CourseCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SharedModule],
+      imports: [
+        SharedModule,
+        TranslateTestingModule.withTranslations({
+          en: require('src/assets/i18n/en-US.json'),
+          uz: require('src/assets/i18n/uz-UZ.json'),
+        }),
+      ],
       declarations: [CourseCardComponent],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();

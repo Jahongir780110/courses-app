@@ -16,6 +16,8 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { AuthorsInputComponent } from './authors-input/authors-input.component';
 import { CheckAuthorsIsNotEmptyDirective } from './directives/check-authors-is-not-empty.directive';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @NgModule({
   declarations: [
     PromptModalComponent,
@@ -30,7 +32,13 @@ import { CheckAuthorsIsNotEmptyDirective } from './directives/check-authors-is-n
     AuthorsInputComponent,
     CheckAuthorsIsNotEmptyDirective,
   ],
-  imports: [CommonModule, FormsModule, FontAwesomeModule, RouterModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    FontAwesomeModule,
+    RouterModule,
+    TranslateModule,
+  ],
   exports: [
     PromptModalComponent,
     ChangeBorderColorDirective,
@@ -46,6 +54,7 @@ import { CheckAuthorsIsNotEmptyDirective } from './directives/check-authors-is-n
     RouterModule,
     AuthorsInputComponent,
     CheckAuthorsIsNotEmptyDirective,
+    TranslateModule,
   ],
 })
 export class SharedModule {}

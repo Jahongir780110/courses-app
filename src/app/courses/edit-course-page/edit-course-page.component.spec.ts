@@ -17,6 +17,7 @@ import { cold } from 'jasmine-marbles';
 
 import * as CoursesActions from '../../state/courses/courses.actions';
 import { Course } from 'src/app/models/course.model';
+import { TranslateTestingModule } from 'ngx-translate-testing';
 
 describe('EditCoursePageComponent', () => {
   let component: EditCoursePageComponent;
@@ -55,6 +56,10 @@ describe('EditCoursePageComponent', () => {
         RouterTestingModule.withRoutes(routes),
         SharedModule,
         HttpClientTestingModule,
+        TranslateTestingModule.withTranslations({
+          en: require('src/assets/i18n/en-US.json'),
+          uz: require('src/assets/i18n/uz-UZ.json'),
+        }),
       ],
       declarations: [],
       providers: [

@@ -1,14 +1,14 @@
 <app-breadcrumb
   *ngIf="oldCourse"
   [routes]="[
-    { name: 'Courses', absolutePath: '/courses' },
+    { name: 'coursesPage.courses' | translate, absolutePath: '/courses' },
     { name: oldCourse.title, absolutePath: '/courses/' + oldCourse.id }
   ]"
 ></app-breadcrumb>
 
 <div class="edit-course-page">
   <div class="form-card p-3">
-    <h3 class="title">Edit course</h3>
+    <h3 class="title">{{ "coursesPage.editCourse" | translate }}</h3>
 
     <form
       #f="ngForm"
@@ -17,14 +17,18 @@
     >
       <div class="title mt-3">
         <div class="form-label w-100 d-flex justify-content-between">
-          <label for="title" class="label-text">Title:</label>
-          <span class="required text-secondary">*required</span>
+          <label for="title" class="label-text"
+            >{{ "form.title" | translate }}:</label
+          >
+          <span class="required text-secondary"
+            >*{{ "form.required" | translate }}</span
+          >
         </div>
 
         <input
           type="text"
           id="title"
-          placeholder="Text input"
+          [placeholder]="'form.enterTitle' | translate"
           class="form-control"
           name="title"
           #title="ngModel"
@@ -34,19 +38,23 @@
         />
 
         <span *ngIf="title.invalid && title.touched" class="text-danger">
-          Please enter valid value
+          {{ "form.pleaseEnterValidValue" | translate }}
         </span>
       </div>
 
       <div class="description mt-3">
         <div class="form-label w-100 d-flex justify-content-between">
-          <label for="description" class="label-text">Description:</label>
-          <span class="required text-secondary">*required</span>
+          <label for="description" class="label-text"
+            >{{ "form.description" | translate }}:</label
+          >
+          <span class="required text-secondary"
+            >*{{ "form.required" | translate }}</span
+          >
         </div>
 
         <textarea
           id="description"
-          placeholder="Add description"
+          [placeholder]="'form.enterDescription' | translate"
           rows="4"
           class="form-control"
           name="description"
@@ -61,7 +69,7 @@
           *ngIf="description.invalid && description.touched"
           class="text-danger"
         >
-          Please enter valid value
+          {{ "form.pleaseEnterValidValue" | translate }}
         </span>
       </div>
 
@@ -70,8 +78,10 @@
           for="date"
           class="form-label w-100 d-flex justify-content-between"
         >
-          <span class="label-text">Date:</span>
-          <span class="required text-secondary">*required</span>
+          <span class="label-text">{{ "form.date" | translate }}:</span>
+          <span class="required text-secondary"
+            >*{{ "form.required" | translate }}</span
+          >
         </label>
 
         <input
@@ -86,15 +96,19 @@
         />
 
         <span *ngIf="date.invalid && date.touched" class="text-danger">
-          Please enter valid value
+          {{ "form.pleaseEnterValidValue" | translate }}
         </span>
       </div>
 
       <div class="duration-wrapper d-flex align-items-end">
         <div class="duration mt-3">
           <div class="form-label w-100 d-flex justify-content-between">
-            <label for="duration" class="label-text">Duration:</label>
-            <span class="required text-secondary">*required</span>
+            <label for="duration" class="label-text"
+              >{{ "form.duration" | translate }}:</label
+            >
+            <span class="required text-secondary"
+              >*{{ "form.required" | translate }}</span
+            >
           </div>
 
           <input
@@ -102,7 +116,7 @@
             min="0"
             class="form-control"
             id="duration"
-            placeholder="minutes"
+            [placeholder]="'form.mins' | translate"
             name="duration"
             #duration="ngModel"
             [(ngModel)]="form.duration"
@@ -114,7 +128,7 @@
             *ngIf="duration.invalid && duration.touched"
             class="text-danger"
           >
-            Please enter valid value
+            {{ "form.pleaseEnterValidValue" | translate }}
           </span>
         </div>
 
@@ -133,7 +147,7 @@
 
       <div class="bottom mt-4 d-flex justify-content-end">
         <button type="button" class="btn btn-secondary" (click)="cancel()">
-          Cancel
+          {{ "form.cancel" | translate }}
         </button>
 
         <button
@@ -141,7 +155,7 @@
           class="btn btn-success ms-3"
           [disabled]="f.invalid"
         >
-          Save
+          {{ "form.save" | translate }}
         </button>
       </div>
     </form>

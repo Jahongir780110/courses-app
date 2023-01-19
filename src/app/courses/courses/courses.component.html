@@ -1,5 +1,7 @@
 <app-breadcrumb
-  [routes]="[{ name: 'Courses', absolutePath: '/courses' }]"
+  [routes]="[
+    { name: 'coursesPage.courses' | translate, absolutePath: '/courses' }
+  ]"
 ></app-breadcrumb>
 
 <div class="courses">
@@ -9,7 +11,7 @@
         <input
           type="text"
           class="form-control"
-          placeholder="Text to search"
+          [placeholder]="'coursesPage.textToSearch' | translate"
           #searchInput
         />
       </form>
@@ -17,7 +19,7 @@
 
     <div class="add-course mt-3 text-end">
       <button class="btn btn-primary" (click)="showAddCoursePage()">
-        + Add course
+        + {{ "coursesPage.addCourse" | translate }}
       </button>
     </div>
 
@@ -34,11 +36,13 @@
       *ngIf="courses.length"
       class="load-more mb-sm-5 mb-3 p-4 d-flex align-items-center justify-content-center"
     >
-      <span (click)="loadMoreCourses()">LOAD MORE</span>
+      <span (click)="loadMoreCourses()">{{
+        "coursesPage.loadMore" | translate
+      }}</span>
     </div>
 
     <div *ngIf="!courses.length" class="no-data mt-4 text-center text-danger">
-      NO DATA. FEEL FREE TO ADD NEW COURSE
+      {{ "coursesPage.noData" | translate }}
     </div>
   </div>
 </div>

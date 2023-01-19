@@ -10,7 +10,7 @@
           data-bs-dismiss="modal"
           (click)="cancel.emit()"
         >
-          Cancel
+          {{ "form.cancel" | translate }}
         </button>
 
         <button
@@ -19,7 +19,7 @@
           data-bs-dismiss="modal"
           (click)="proceed.emit()"
         >
-          Delete
+          {{ "form.delete" | translate }}
         </button>
       </div>
     </div>

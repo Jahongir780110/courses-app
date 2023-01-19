@@ -1,0 +1,46 @@
+{
+  "login": "Kirish",
+  "logoff": "Chiqish",
+  "form": {
+    "login": "Login",
+    "password": "Parol",
+    "title": "Sarlavha",
+    "description": "Tavsif",
+    "date": "Sana",
+    "duration": "Davomiylik",
+    "authors": "Mualliflar",
+    "required": "majburiy",
+    "forgotPassword": "Parolni unutdingizmi?",
+    "cancel": "Qaytish",
+    "save": "Saqlash",
+    "delete": "O'chirish",
+    "enterLogin": "Loginni kiriting",
+    "enterPasssword": "Parolni kiriting",
+    "enterTitle": "Sarlavha kiriting",
+    "enterDescription": "Tavsif kiriting",
+    "enterDuration": "Davomiylikni kiriting",
+    "enterAuthors": "Mualliflarni kiriting",
+    "mins": "daqiqalar",
+    "lessCharactersError": "Iltimos kamida {{count}}ta belgi kiriting",
+    "pleaseEnterValidValue": "Iltimos yaroqli qiymat kiriting"
+  },
+  "footer": {
+    "videoCourses": "Video kurslar",
+    "allRightsReserved": "Barcha huquqlar himoyalangan"
+  },
+  "notFoundPage": {
+    "notFound": "Sahifa Topilmadi"
+  },
+  "coursesPage": {
+    "courses": "Kurslar",
+    "textToSearch": "Qidirish uchun kiriting",
+    "addCourse": "Kurs qo'shish",
+    "editCourse": "Kursni o'zgartirish",
+    "edit": "O'zgartirish",
+    "delete": "O'chirish",
+    "loadMore": "KO'PROQ YUKLASH",
+    "newCourse": "Yangi kurs",
+    "noData": "Ma'lumot topilmadi. Yangi kurs qo'shishingiz mumkin",
+    "deleteCoursePrompt": "Haqiqattan ham kursni o'chirmoqchimisiz?"
+  }
+}

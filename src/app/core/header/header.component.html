@@ -17,9 +17,26 @@
         </li>
 
         <li class="nav-item ms-2">
-          <span class="nav-link" (click)="logout()">
+          <div class="dropdown lang">
+            <button
+              type="button"
+              class="btn btn-outline-light dropdown-toggle"
+              data-bs-toggle="dropdown"
+            >
+              {{ currentLang }}
+            </button>
+
+            <ul class="dropdown-menu">
+              <li class="dropdown-item" (click)="changeLang('en-US')">en</li>
+              <li class="dropdown-item" (click)="changeLang('uz-UZ')">uz</li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="nav-item ms-2">
+          <span class="nav-link logout" (click)="logout()">
             <fa-icon [icon]="faRightFromBracket"></fa-icon>
-            <span class="nav-item__text ms-1">Log off</span>
+            <span class="nav-item__text ms-1">{{ "logoff" | translate }}</span>
           </span>
         </li>
       </ul>
