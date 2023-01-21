@@ -50,12 +50,14 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     CoreModule,
     SharedModule,
     UserModule,
     HttpClientModule,
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(routes, {
+      initialNavigation: 'enabledBlocking',
+    }),
     StoreModule.forRoot({
       loading: loadingReducer,
       auth: authReducer,
