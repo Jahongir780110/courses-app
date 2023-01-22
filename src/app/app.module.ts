@@ -26,6 +26,8 @@ import { CoursesEffects } from './state/courses/courses.effects';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
+import { environment } from 'src/environments/environment';
+
 export const routes: Routes = [
   {
     path: '',
@@ -43,8 +45,13 @@ export const routes: Routes = [
   },
 ];
 
+// Don't forget to change hostUrl before prerendering!
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-  return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
+  return new TranslateHttpLoader(
+    http,
+    environment.hostUrl + '/assets/i18n/',
+    '.json'
+  );
 }
 
 @NgModule({

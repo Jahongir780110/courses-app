@@ -9,6 +9,10 @@ import * as LoadingActions from '../loading/loading.actions';
 import { Course } from 'src/app/models/course.model';
 import { Router } from '@angular/router';
 import { Author } from 'src/app/models/author.model';
+import { makeStateKey, TransferState } from '@angular/platform-browser';
+
+export const loadedCourseKey = makeStateKey('loadedCourse');
+export const loadedAuthorsKey = makeStateKey('loadedAuthors');
 
 @Injectable()
 export class CoursesEffects {
@@ -16,7 +20,8 @@ export class CoursesEffects {
     private actions: Actions,
     private store: Store<AppState>,
     private coursesService: CourseService,
-    private router: Router
+    private router: Router,
+    private transferState: TransferState
   ) {}
 
   $getCourses = createEffect(() => {
@@ -116,6 +121,9 @@ export class CoursesEffects {
             };
 
             this.store.dispatch(LoadingActions.setLoading({ value: false }));
+
+            this.transferState.set(loadedCourseKey, course as any);
+
             return CoursesActions.getCourseSuccess({ course });
           })
         );
@@ -189,6 +197,8 @@ export class CoursesEffects {
         return from(this.coursesService.getAuthors()).pipe(
           map((data: Author[]) => {
             this.store.dispatch(LoadingActions.setLoading({ value: false }));
+
+            this.transferState.set(loadedAuthorsKey, data as any);
 
             return CoursesActions.getAuthorsSuccess({ authors: data });
           })

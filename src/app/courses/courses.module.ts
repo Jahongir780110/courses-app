@@ -23,7 +23,7 @@ const routes: Routes = [
   {
     path: ':courseId',
     component: EditCoursePageComponent,
-    canActivate: [AuthGuardGuard],
+    // canActivate: [AuthGuardGuard],    // task 13 says every user should be able to access this route
   },
 ];
 

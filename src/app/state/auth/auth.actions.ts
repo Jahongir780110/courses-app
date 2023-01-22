@@ -27,3 +27,5 @@ export const getUserSuccess = createAction(
 );
 
 export const logout = createAction('[Auth] Logout');
+
+export const autoLogin = createAction('[Auth] AutoLogin');

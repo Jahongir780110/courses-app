@@ -12,6 +12,11 @@ import {
 import { NgForm } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Author } from 'src/app/models/author.model';
+import { TransferState } from '@angular/platform-browser';
+import {
+  loadedAuthorsKey,
+  loadedCourseKey,
+} from 'src/app/state/courses/courses.effects';
 
 interface formModel {
   title: string;
@@ -40,15 +45,32 @@ export class EditCoursePageComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private transferState: TransferState
   ) {}
 
   ngOnInit(): void {
     const courseId = this.route.snapshot.paramMap.get('courseId') as string;
 
+    const loadedCourse = this.transferState.get(loadedCourseKey, null);
+    const loadedAuthors = this.transferState.get(loadedAuthorsKey, null);
+
     setTimeout(() => {
-      this.store.dispatch(CoursesActions.getCourse({ id: +courseId }));
-      this.store.dispatch(CoursesActions.getAuthors());
+      if (!loadedCourse) {
+        this.store.dispatch(CoursesActions.getCourse({ id: +courseId }));
+      } else {
+        this.store.dispatch(
+          CoursesActions.getCourseSuccess({ course: loadedCourse })
+        );
+      }
+
+      if (!loadedAuthors) {
+        this.store.dispatch(CoursesActions.getAuthors());
+      } else {
+        this.store.dispatch(
+          CoursesActions.getAuthorsSuccess({ authors: loadedAuthors })
+        );
+      }
     }, 0); // If i remove setTimeout() it is showing ExpressionChangedAfterItHasBeenCheckedError in the console
 
     this.store.select(selectEditingCourse).subscribe((course) => {

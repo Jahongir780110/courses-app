@@ -11,7 +11,7 @@
     "dev:ssr": "ng run my-app:serve-ssr",
     "serve:ssr": "node dist/my-app/server/main.js",
     "build:ssr": "ng build && ng run my-app:server",
-    "prerender": "ng run my-app:prerender",
+    "prerender": "ng run my-app:prerender --routes-file routes.txt",
     "backend:install": "cd ./backend && npm install",
     "backend:start": "cd ./backend && npm start"
   },

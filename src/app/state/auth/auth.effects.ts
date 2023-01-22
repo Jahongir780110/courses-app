@@ -96,4 +96,28 @@ export class AuthEffects {
     },
     { dispatch: false }
   );
+
+  autoLogin$ = createEffect(
+    () => {
+      return this.actions.pipe(
+        ofType(AuthActions.autoLogin),
+        tap(() => {
+          const token = localStorage.getItem('token');
+          const user = localStorage.getItem('user');
+
+          if (token && user) {
+            const parsedUser = JSON.parse(user) as User;
+
+            this.store.dispatch(AuthActions.loginSuccess({ token: token }));
+            this.store.dispatch(
+              AuthActions.getUserSuccess({ user: parsedUser })
+            );
+
+            this.router.navigate(['/courses']);
+          }
+        })
+      );
+    },
+    { dispatch: false }
+  );
 }
