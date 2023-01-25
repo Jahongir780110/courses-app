@@ -67,6 +67,22 @@ describe('LoginPageComponent', () => {
         password: component.form.password,
       }),
     });
+
     expect(mockStore.scannedActions$).toBeObservable(expected);
+  }));
+
+  it('login button should be disabled if form is invalid', fakeAsync(() => {
+    component.form.login = '';
+    component.form.password = '';
+
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+
+    const loginBtn = template.querySelector(
+      '.bottom button'
+    ) as HTMLButtonElement;
+
+    expect(loginBtn.disabled).toBe(true);
   }));
 });

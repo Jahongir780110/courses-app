@@ -95,6 +95,9 @@ describe('EditCoursePageComponent', () => {
   });
 
   it('should dispatch updateCourse action when "save" button is clicked', fakeAsync(() => {
+    fixture.detectChanges();
+    tick();
+
     const form = template.querySelector('form') as HTMLFormElement;
     form.dispatchEvent(new Event('submit'));
 
@@ -112,6 +115,41 @@ describe('EditCoursePageComponent', () => {
       }),
     });
     expect(mockStore.scannedActions$).toBeObservable(expected);
+  }));
+
+  it('submit button should be disabled if the form is invalid', fakeAsync(() => {
+    mockStore.setState({
+      courses: {
+        courses: [],
+        editingCourse: {
+          id: 321,
+          title: '',
+          description: '',
+          duration: 123,
+          creationDate: new Date(),
+          topRated: true,
+          authors: [
+            {
+              id: 'id',
+              name: 'name',
+            },
+          ],
+        },
+      },
+      auth: {
+        token: 'token',
+      },
+    });
+
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+
+    const submitBtn = template.querySelector(
+      '.bottom .btn-success'
+    ) as HTMLButtonElement;
+
+    expect(submitBtn.disabled).toBeTrue();
   }));
 
   it('should redirect to "courses" page when "cancel" button is clicked', fakeAsync(() => {

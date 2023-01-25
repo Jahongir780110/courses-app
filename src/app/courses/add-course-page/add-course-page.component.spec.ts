@@ -4,7 +4,7 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-import { DatePipe, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SharedModule } from 'src/app/shared/shared.module';
 
@@ -62,6 +62,15 @@ describe('AddCoursePageComponent', () => {
   });
 
   it('should dispatch createCourse action when "save" button is clicked', fakeAsync(() => {
+    component.form.title = 'title';
+    component.form.description = 'description';
+    component.form.date = '2019-03-04';
+    component.form.duration = 12;
+    component.form.authors = [{ name: 'Name', id: '123' }];
+
+    fixture.detectChanges();
+    tick();
+
     const form = template.querySelector('form') as HTMLFormElement;
     form.dispatchEvent(new Event('submit'));
 
@@ -78,6 +87,18 @@ describe('AddCoursePageComponent', () => {
       }),
     });
     expect(mockStore.scannedActions$).toBeObservable(expected);
+  }));
+
+  it('submit button should be disabled if the form is invalid', fakeAsync(() => {
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+
+    const submitBtn = template.querySelector(
+      '.bottom .btn-success'
+    ) as HTMLButtonElement;
+
+    expect(submitBtn.disabled).toBeTrue();
   }));
 
   it('should redirect to "courses" page when "cancel" button is clicked', fakeAsync(() => {

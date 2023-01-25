@@ -17,7 +17,7 @@
     name="authors"
     #authors="ngModel"
     [(ngModel)]="authorsValue"
-    (keyup.enter)="addAuthor($event)"
+    (keyup.enter)="addAuthor()"
   />
   <datalist id="authorsList">
     <option *ngFor="let author of allAuthors" [value]="author.name"></option>

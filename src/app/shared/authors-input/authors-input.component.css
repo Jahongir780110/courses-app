@@ -1,3 +1,9 @@
+.selected-authors {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+
 .label-text {
   font-weight: 500;
 }

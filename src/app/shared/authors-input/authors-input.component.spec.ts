@@ -22,6 +22,7 @@ describe('AuthorsInputComponent', () => {
 
     fixture = TestBed.createComponent(AuthorsInputComponent);
     component = fixture.componentInstance;
+
     fixture.detectChanges();
   });
 

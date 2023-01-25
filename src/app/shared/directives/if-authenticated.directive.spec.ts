@@ -12,7 +12,6 @@ class TestComponent {}
 describe('IfAuthenticatedDirective', () => {
   let fixture: ComponentFixture<TestComponent>;
   let template: HTMLElement;
-  let mockStore: MockStore;
 
   const initialState = {
     auth: {
@@ -28,11 +27,12 @@ describe('IfAuthenticatedDirective', () => {
     }).createComponent(TestComponent);
 
     template = fixture.nativeElement as HTMLElement;
-    mockStore = TestBed.inject(MockStore);
+    TestBed.inject(MockStore);
   });
 
   it('shouln\'t show "Authenticated" text if not authenticated', () => {
     fixture.detectChanges();
+
     expect(template.querySelector('div')).not.toBeTruthy();
   });
 });

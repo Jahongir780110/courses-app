@@ -26,9 +26,7 @@ export class AuthorsInputComponent implements ControlValueAccessor {
   onChange: any;
   onTouch: any;
 
-  addAuthor(event: Event) {
-    event.preventDefault();
-
+  addAuthor() {
     const selectedAuthor = this.allAuthors.find(
       (author) => author.name === this.authorsValue
     );

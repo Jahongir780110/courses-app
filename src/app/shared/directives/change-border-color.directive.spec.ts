@@ -27,13 +27,16 @@ describe('ChangeBorderColorDirective', () => {
     const directive = new ChangeBorderColorDirective({
       nativeElement: document.createElement('div'),
     });
+
     expect(directive).toBeTruthy();
   });
 
   it('should have green border color for recent course', () => {
     const oneDayInMilliSeconds = 1000 * 60 * 60 * 24;
     component.date = new Date(new Date().getTime() - oneDayInMilliSeconds);
+
     fixture.detectChanges();
+
     expect(template.querySelector('div')?.style.borderColor).toBe(
       'rgb(25, 135, 84)'
     );
@@ -41,7 +44,9 @@ describe('ChangeBorderColorDirective', () => {
 
   it('should have blue border color for upcoming course', () => {
     component.date = new Date(2024, 1, 2);
+
     fixture.detectChanges();
+
     expect(template.querySelector('div')?.style.borderColor).toBe(
       'rgb(13, 110, 253)'
     );
@@ -49,7 +54,9 @@ describe('ChangeBorderColorDirective', () => {
 
   it('should have transparent border color for old course', () => {
     component.date = new Date(2021, 1, 2);
+
     fixture.detectChanges();
+
     expect(template.querySelector('div')?.style.borderColor).toBe('');
   });
 });

@@ -7,6 +7,9 @@ import {
 } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
+
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 import { UserModule } from './user/user.module';
@@ -16,13 +19,12 @@ import { AuthInterceptor } from './services/auth.interceptor';
 import { AppComponent } from './app.component';
 import { NotFoundComponent } from './core/not-found/not-found.component';
 
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { EffectsModule } from '@ngrx/effects';
 import { loadingReducer } from './state/loading/loading.reducer';
 import { authReducer } from './state/auth/auth.reducers';
 import { coursesReducer } from './state/courses/courses.reducers';
 import { AuthEffects } from './state/auth/auth.effects';
 import { CoursesEffects } from './state/courses/courses.effects';
+
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
@@ -58,17 +60,9 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   declarations: [AppComponent],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
-    CoreModule,
-    SharedModule,
-    UserModule,
     HttpClientModule,
     RouterModule.forRoot(routes, {
       initialNavigation: 'enabledBlocking',
-    }),
-    StoreModule.forRoot({
-      loading: loadingReducer,
-      auth: authReducer,
-      courses: coursesReducer,
     }),
     EffectsModule.forRoot([AuthEffects, CoursesEffects]),
     StoreDevtoolsModule.instrument({
@@ -83,6 +77,14 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         useFactory: HttpLoaderFactory,
         deps: [HttpClient],
       },
+    }),
+    CoreModule,
+    SharedModule,
+    UserModule,
+    StoreModule.forRoot({
+      loading: loadingReducer,
+      auth: authReducer,
+      courses: coursesReducer,
     }),
   ],
   providers: [
